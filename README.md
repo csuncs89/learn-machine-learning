@@ -1,2 +1,2 @@
-# learn-sklearn
-Playground for learning the scikit-learn library
+# learn-machine-learning
+Playground for learning machine learning
