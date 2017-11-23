@@ -3,7 +3,10 @@
 """
 import pickle
 
+import numpy as np
+
 from sklearn import datasets
+from sklearn import random_projection
 from sklearn import svm
 
 
@@ -63,9 +66,38 @@ def model_persistence():
     print ys_pred1 == ys_test
 
 
+def conventions():
+    rng = np.random.RandomState(0)
+    X1 = rng.rand(10, 2000)
+    print(type(X1))
+    print(X1.dtype)
+
+    X2 = np.array(X1, dtype='float32')
+
+    transformer = random_projection.GaussianRandomProjection()
+    X_new = transformer.fit_transform(X2)
+    print(X_new.dtype)
+
+    # Field 'a' is little-endian int32, field 'b' is also little-endian int32
+    # See https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.dtypes.html
+    x = np.array([(1, 2), (3, 4)], dtype=[('a', '<i4'), ('b', '<i4')])
+    print(x)
+    print(x['a'])
+    print(x.dtype)
+
+
 def main():
+    print('Learning and predicting')
     learn_and_predict()
+    print('-' * 79 + '\n')
+
+    print('Model persistence')
     model_persistence()
+    print('-' * 79 + '\n')
+
+    print('Conventions')
+    conventions()
+    print('-' * 79 + '\n')
 
 
 if __name__ == '__main__':
