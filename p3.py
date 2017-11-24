@@ -2,6 +2,7 @@
 
 
 """
+import functools
 import pprint
 
 from sklearn import datasets, svm, model_selection, linear_model
@@ -9,6 +10,58 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def print_banner(title):
+
+    def identity_wrapper(func):
+
+        @functools.wraps(func)
+        def func_wrapper(*args, **kwargs):
+            print('-' * 79)
+            print(title)
+            ret = func(*args, **kwargs)
+            print('-' * 79 + '\n')
+            return ret
+
+        return func_wrapper
+
+    return identity_wrapper
+
+
+@print_banner(title='title')
+def foobar(*args):
+    print(args)
+
+'''
+# Above code equals
+
+def foobar(*args):
+    print(args)
+foobar = print_banner('title')(foobar)
+
+# After calling print_banner
+
+def foobar(*args):
+    print(args)
+foobar = identity_wrapper(foobar) # 'title' is in the calling frame (closure)
+
+# After calling identity_wrapper
+
+def foobar(*args):
+    print(args)
+
+# Suppose do not use functools.wraps
+def func_wrapper(*args, **kwargs):
+    print('-' * 79 + '\n')
+    print(title)
+    ret = func(*args, **kwargs)
+    print('-' * 79 + '\n')
+    return ret
+
+foobar = func_wrapper # The func foobar is in the calling frame (closure)
+'''
+
+
+@print_banner('Print score')
 def f1():
     digits = datasets.load_digits()
     X_digits = digits.data
@@ -25,6 +78,7 @@ def f1():
     print(score)
 
 
+@print_banner('Cross validation scores')
 def f2():
     digits = datasets.load_digits()
     X_digits = digits.data
@@ -63,6 +117,7 @@ def f2():
     print(scores)
 
 
+@print_banner('Exercise - cross validation of digits dataset')
 def exercise_digits():
     digits = datasets.load_digits()
     X = digits.data
@@ -97,6 +152,7 @@ def exercise_digits():
     plt.show()
 
 
+@print_banner('Grid search')
 def grid_search():
     digits = datasets.load_digits()
     X = digits.data
@@ -116,6 +172,7 @@ def grid_search():
     print('Best gamma: {gamma}'.format(gamma=clf.best_estimator_.gamma))
 
 
+@print_banner('Exercise - grid search of diabetes dataset')
 def exercise_diabetes():
     diabetes = datasets.load_diabetes()
     X = diabetes.data[:150]
@@ -164,11 +221,12 @@ def exercise_diabetes():
 
 
 def main():
-    # f1()
-    # f2()
-    # exercise_digits()
-    # grid_search()
+    f1()
+    f2()
+    exercise_digits()
+    grid_search()
     exercise_diabetes()
+
 
 if __name__ == '__main__':
     main()
