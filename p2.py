@@ -246,6 +246,8 @@ def exercise_svm():
         classifier = svm.SVC(kernel=kernel, gamma=10)
         classifier.fit(X_train, y_train)
 
+        print('Score:', classifier.score(X_test, y_test))
+
         plt.figure(fig_num)
         plt.clf()
         plt.scatter(x=X[:, 0], y=X[:, 1], c=y, zorder=10, cmap=plt.cm.Paired,
@@ -300,6 +302,8 @@ def exercise_svm_ans():
     for fig_num, kernel in enumerate(('linear', 'rbf', 'poly')):
         clf = svm.SVC(kernel=kernel, gamma=10)
         clf.fit(X_train, y_train)
+
+        print('Score:', clf.score(X_test, y_test))
 
         plt.figure(fig_num)
         plt.clf()
