@@ -4,16 +4,17 @@ Decoration utilities
 import functools
 
 
-def print_banner(title):
+def print_banner(title, ch='='):
 
     def identity_wrapper(func):
 
         @functools.wraps(func)
         def func_wrapper(*args, **kwargs):
-            print('-' * 79)
-            print(title)
+            t = ''.join([' ' * 2, title, ' ' * 2])
+            n_ch = (79 - len(t)) / 2
+            print(ch * n_ch + t + ch * (79 - n_ch - len(t)))
             ret = func(*args, **kwargs)
-            print('-' * 79 + '\n')
+            print('_' * 79 + '\n')
             return ret
 
         return func_wrapper
