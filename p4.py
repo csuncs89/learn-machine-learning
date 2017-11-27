@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import deco_utils
+from sklearn.feature_extraction.image import grid_to_graph
 
 
 @deco_utils.print_banner('KMeans clustering')
@@ -56,9 +57,31 @@ def vector_quantization():
     plt.show()
 
 
+def print_args(*args, **kwargs):
+    print('args: {0}'.format(args))
+    print('kwargs: {0}'.format(kwargs))
+    
+def print_args2(nx, ny):
+    print('{0}, {1}'.format(nx, ny))
+
+@deco_utils.print_banner('Feature agglomeration')
+def hierarchical_clustering():
+    digits = datasets.load_digits()
+    images = digits.images
+    print(images.shape)
+    X = np.reshape(images, (len(images), -1))
+    print(X.shape)
+    print_args(*images[0].shape)
+    print_args2(*images[0].shape)
+    connectivity = grid_to_graph(8, 8)
+    
+    print(connectivity.toarray())
+
+
 def main():
-    kmeans_clustering()
-    vector_quantization()
+    # kmeans_clustering()
+    # vector_quantization()
+    hierarchical_clustering()
 
 if __name__ == '__main__':
     main()
