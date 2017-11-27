@@ -60,9 +60,11 @@ def vector_quantization():
 def print_args(*args, **kwargs):
     print('args: {0}'.format(args))
     print('kwargs: {0}'.format(kwargs))
-    
+
+
 def print_args2(nx, ny):
     print('{0}, {1}'.format(nx, ny))
+
 
 @deco_utils.print_banner('Feature agglomeration')
 def hierarchical_clustering():
@@ -73,9 +75,38 @@ def hierarchical_clustering():
     print(X.shape)
     print_args(*images[0].shape)
     print_args2(*images[0].shape)
-    connectivity = grid_to_graph(8, 8)
-    
+
+    '''
+    012
+    345
+    678
+    (0, 0), (0, 1), (0, 3)
+    (1, 1), (1, 0), (1, 2), (1, 4)
+    (2, 2), (2, 1), (2, 5)
+    ...
+    '''
+    connectivity = grid_to_graph(3, 3)
     print(connectivity.toarray())
+
+    connectivity = grid_to_graph(*images[0].shape)
+
+    agglo = cluster.FeatureAgglomeration(connectivity=connectivity,
+                                         n_clusters=10)
+    print(X[0])
+    print(X[1])
+    print(X.shape)
+
+    agglo.fit(X)
+    X_reduced = agglo.transform(X)
+    print(X_reduced[0])
+    print(X_reduced[1])
+    print(X_reduced.shape)
+
+    agglo.fit(X[:10])
+    X_reduced = agglo.transform(X[:10])
+    print(X_reduced[0])
+    print(X_reduced[1])
+    print(X_reduced.shape)
 
 
 def main():
