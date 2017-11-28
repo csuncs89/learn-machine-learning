@@ -3,9 +3,10 @@
 """
 import pprint
 
-from sklearn import cluster
+from sklearn import cluster, decomposition
 from sklearn import datasets
 import scipy.misc
+import scipy.signal
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -109,10 +110,58 @@ def hierarchical_clustering():
     print(X_reduced.shape)
 
 
+@deco_utils.print_banner('Principle component analysis: PCA')
+def principle_component_analysis():
+    x1 = np.random.normal(size=100)
+    x2 = np.random.normal(size=100)
+    x3 = x1 + x2
+    X = np.c_[x1, x2, x3]
+
+    pca = decomposition.PCA()
+    pca.fit(X)
+    print(pca.explained_variance_)
+
+    pca.set_params(n_components=2)
+    X_reduced = pca.fit_transform(X)
+    print(X_reduced.shape)
+
+
+@deco_utils.print_banner('Independent component analysis: ICA')
+def independent_component_analysis():
+    t = np.linspace(0, 10, 2000)
+    s1 = np.sin(2 * t)
+    s2 = np.sign(np.sin(3 * t))
+    s3 = scipy.signal.sawtooth(2 * np.pi * t)
+
+    print(s1.shape)
+    print(s2.shape)
+    print(s3.shape)
+
+    S = np.c_[s1, s2, s3]
+    print(S.shape)
+
+    S += 0.2 * np.random.normal(size=S.shape)
+    S /= S.std(axis=0)
+    print(S.shape)
+
+    A = np.array([[1, 1, 1], [0.5, 2, 1], [1.5, 1, 2]])
+    print(A.shape)
+    X = np.dot(S, A.T)
+    print(X.shape)
+
+    ica = decomposition.FastICA()
+    S_ = ica.fit_transform(X)
+    A_ = ica.mixing_.T
+
+    print(np.allclose(X, np.dot(S_, A_) + ica.mean_))
+
+
 def main():
-    # kmeans_clustering()
-    # vector_quantization()
+    kmeans_clustering()
+    vector_quantization()
     hierarchical_clustering()
+    principle_component_analysis()
+    independent_component_analysis()
 
 if __name__ == '__main__':
     main()
