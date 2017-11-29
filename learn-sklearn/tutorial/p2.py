@@ -3,11 +3,13 @@
 """
 import pprint
 
-import numpy as np
-
-from sklearn import datasets, neighbors, linear_model, svm
+from sklearn import datasets
+from sklearn import linear_model
+from sklearn import neighbors
+from sklearn import svm
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def prepare_datasets():

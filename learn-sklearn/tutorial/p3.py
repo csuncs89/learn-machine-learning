@@ -1,10 +1,12 @@
 """
 
-
 """
 import pprint
 
-from sklearn import datasets, svm, model_selection, linear_model
+from sklearn import datasets
+from sklearn import linear_model
+from sklearn import model_selection
+from sklearn import svm
 import matplotlib.pyplot as plt
 import numpy as np
 

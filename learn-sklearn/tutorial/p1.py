@@ -3,11 +3,10 @@
 """
 import pickle
 
-import numpy as np
-
 from sklearn import datasets
 from sklearn import random_projection
 from sklearn import svm
+import numpy as np
 
 
 def split_dataset(X, ys, num_training):

@@ -3,15 +3,16 @@
 """
 import pprint
 
-from sklearn import cluster, decomposition
+from sklearn import cluster
 from sklearn import datasets
-import scipy.misc
-import scipy.signal
+from sklearn import decomposition
+from sklearn.feature_extraction.image import grid_to_graph
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.misc
+import scipy.signal
 
 import deco_utils
-from sklearn.feature_extraction.image import grid_to_graph
 
 
 @deco_utils.print_banner('KMeans clustering')
