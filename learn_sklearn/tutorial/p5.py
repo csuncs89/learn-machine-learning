@@ -9,7 +9,7 @@ from sklearn import model_selection
 from sklearn import pipeline
 import numpy as np
 
-import deco_utils
+from lml.utils import deco_utils
 
 
 @deco_utils.print_banner('Pipelining PCA and logistic regression')
