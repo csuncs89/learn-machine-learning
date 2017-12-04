@@ -36,6 +36,7 @@ def parse_args():
 
     return args
 
+
 def load_dir(path):
     imgs = []
     labels = []
@@ -66,9 +67,9 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    batch_size = 128
+    batch_size = 64
     num_classes = 200
-    epochs = 10
+    epochs = 100
 
     img_h, img_w = 28, 28
 
