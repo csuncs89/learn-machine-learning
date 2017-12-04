@@ -37,6 +37,7 @@ def parse_args():
 
 
 def load_dir(path):
+    print('Scanning subdirectory', path)
     imgs = []
     labels = []
     for name_label in os.listdir(path):
@@ -44,7 +45,7 @@ def load_dir(path):
             continue
         label = int(name_label)
         path1 = os.path.join(path, name_label)
-        print('Scanning subdirectory', path1)
+
         for name_img in os.listdir(path1):
             path_img = os.path.join(path1, name_img)
             img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
