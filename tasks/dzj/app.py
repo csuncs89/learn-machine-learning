@@ -1,13 +1,62 @@
+"""
+
+"""
+
 from __future__ import print_function
+
+import argparse
+import os
+import sys
+import re
+
+import cv2
 import keras
-from keras.datasets import mnist
 from keras import models
 from keras import layers
+import numpy as np
 import tensorflow as tf
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Character recognition'
+    )
+    parser.add_argument(
+        'dir_dataset',
+        help='Directory to the dataset',
+    )
+
+    print(sys.argv)
+
+    if len(sys.argv) == 1:
+        print(parser.print_help())
+        sys.exit(0)
+
+    args = parser.parse_args()
+
+    return args
+
+def load_dir(path):
+    imgs = []
+    labels = []
+    for name_label in os.listdir(path):
+        if not name_label.isdigit():
+            continue
+        label = int(name_label)
+        path1 = os.path.join(path, name_label)
+        print('Scanning subdirectory', path1)
+        for name_img in os.listdir(path1):
+            path_img = os.path.join(path, name_img)
+            img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
+            img = cv2.resize(img, (28, 28))
+            imgs.append(img)
+            labels.append(label)
+    return np.array(imgs), np.array(labels)
+
 
 def main():
+    args = parse_args()
+
     tfconfig = tf.ConfigProto(allow_soft_placement=True)
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
@@ -18,7 +67,11 @@ def main():
 
     img_h, img_w = 28, 28
 
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    dir_train = os.path.join(args.dir_dataset, 'train')
+    x_train, y_train = load_dir(dir_train)
+
+    dir_test = os.path.join(args.dir_dataset, 'test')
+    x_test, y_test = load_dir(dir_test)
 
     x_train = x_train.reshape(x_train.shape[0], img_h, img_w, 1)
     x_test = x_test.reshape(x_test.shape[0], img_h, img_w, 1)
@@ -32,9 +85,9 @@ def main():
     y_train = keras.utils.to_categorical(y_train, num_classes)
     y_test = keras.utils.to_categorical(y_test, num_classes)
 
-
     model = models.Sequential()
-    model.add(layers.Conv2D(32, kernel_size=(3, 3), activation='relu',
+    model.add(layers.Conv2D(32, kernel_size=(3, 3),
+                            activation='relu',
                             input_shape=input_shape))
     model.add(layers.Conv2D(64, (3, 3), activation='relu'))
     model.add(layers.MaxPool2D(pool_size=(2, 2)))
