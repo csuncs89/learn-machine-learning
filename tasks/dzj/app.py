@@ -1,20 +1,21 @@
 """
 
 """
-
 from __future__ import print_function
 
 import argparse
 import os
 import sys
-import re
 
 import cv2
 import keras
-from keras import models
-from keras import layers
 import numpy as np
 import tensorflow as tf
+from keras import callbacks
+from keras import layers
+from keras import models
+
+LOCAL_DEBUG = False
 
 
 def parse_args():
@@ -26,10 +27,8 @@ def parse_args():
         help='Directory to the dataset',
     )
 
-    print(sys.argv)
-
-    if len(sys.argv) == 1:
-        print(parser.print_help())
+    if len(sys.argv) <= 1:
+        parser.print_help()
         sys.exit(0)
 
     args = parser.parse_args()
@@ -48,12 +47,8 @@ def load_dir(path):
         print('Scanning subdirectory', path1)
         for name_img in os.listdir(path1):
             path_img = os.path.join(path1, name_img)
-            print(path_img)
             img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (28, 28))
-            # cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-            # cv2.imshow('img', img)
-            # cv2.waitKey(0)
             img = 255 - img
             imgs.append(img)
             labels.append(label)
@@ -83,6 +78,12 @@ def main():
     x_test = x_test.reshape(x_test.shape[0], img_h, img_w, 1)
     input_shape = (img_h, img_w, 1)
 
+    if LOCAL_DEBUG:
+        x_train = x_train[:1000]
+        y_train = y_train[:1000]
+        x_test = x_test[:100]
+        y_test = y_test[:100]
+
     x_train = x_train.astype('float32') / 255
     x_test = x_test.astype('float32') / 255
     print('x_train.shape:', x_train.shape)
@@ -107,11 +108,28 @@ def main():
                   optimizer=keras.optimizers.Adadelta(),
                   metrics=['accuracy'])
 
-    model.fit(x_train, y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              verbose=1,
-              validation_data=(x_test, y_test))
+    dir_version = 'v1'
+    path_weights = os.path.join(dir_version, 'weights.hdfs')
+    if os.path.exists(path_weights):
+        model.load_weights(path_weights)
+        print('Weights are restored from', path_weights)
+
+    callback_checkpoint = callbacks.ModelCheckpoint(filepath=path_weights,
+                                                    verbose=1,
+                                                    save_best_only=True,
+                                                    save_weights_only=True)
+
+    dir_log_tensorboard = os.path.join(dir_version, 'log_tensorboard')
+    if not os.path.exists(dir_log_tensorboard):
+        os.makedirs(dir_log_tensorboard)
+    callback_tensorboard = callbacks.TensorBoard(log_dir=dir_log_tensorboard)
+
+    history = model.fit(x_train, y_train,
+                        batch_size=batch_size,
+                        epochs=epochs,
+                        verbose=1,
+                        validation_data=(x_test, y_test),
+                        callbacks=[callback_checkpoint, callback_tensorboard])
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy', score[1])
