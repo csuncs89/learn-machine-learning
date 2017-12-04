@@ -46,9 +46,14 @@ def load_dir(path):
         path1 = os.path.join(path, name_label)
         print('Scanning subdirectory', path1)
         for name_img in os.listdir(path1):
-            path_img = os.path.join(path, name_img)
+            path_img = os.path.join(path1, name_img)
+            print(path_img)
             img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (28, 28))
+            # cv2.namedWindow('img', cv2.WINDOW_NORMAL)
+            # cv2.imshow('img', img)
+            # cv2.waitKey(0)
+            img = 255 - img
             imgs.append(img)
             labels.append(label)
     return np.array(imgs), np.array(labels)
@@ -62,7 +67,7 @@ def main():
     sess = tf.Session(config=tfconfig)
 
     batch_size = 128
-    num_classes = 10
+    num_classes = 200
     epochs = 10
 
     img_h, img_w = 28, 28
