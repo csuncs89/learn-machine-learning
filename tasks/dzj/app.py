@@ -199,7 +199,7 @@ class DzjRecognizerV1(DzjRecognizer):
 class DzjRecognizerV2(DzjRecognizerV1):
 
     def _configure(self):
-        super()._configure()
+        super(DzjRecognizerV2, self)._configure()
 
         # Version of the model
         self.version_model = 'v2'
@@ -228,6 +228,38 @@ class DzjRecognizerV2(DzjRecognizerV1):
         self._model = model
 
 
+class DzjRecognizerV3(DzjRecognizerV1):
+
+    def _configure(self):
+        super(DzjRecognizerV3, self)._configure()
+
+        # Version of the model
+        self.version_model = 'v3'
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+        model = models.Sequential()
+        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+        model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+        model.add(layers.Flatten())
+        model.add(layers.Dense(500, activation='relu'))
+        model.add(layers.Dropout(0.5))
+        model.add(layers.Dense(self.num_classes, activation='softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adadelta(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
@@ -235,7 +267,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    recognizer = DzjRecognizerV2()
+    recognizer = DzjRecognizerV3()
 
     recognizer.run(args.dir_dataset, epochs=100)
 
