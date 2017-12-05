@@ -174,11 +174,46 @@ class DzjRecognizerV1(DzjRecognizer):
         self.local_debug = False
 
     def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 128 200
+        """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
         model.add(layers.Conv2D(32, kernel_size=(3, 3),
                                 activation='relu',
                                 input_shape=input_shape))
+        model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+        model.add(layers.Flatten())
+        model.add(layers.Dense(128, activation='relu'))
+        model.add(layers.Dropout(0.5))
+        model.add(layers.Dense(self.num_classes, activation='softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adadelta(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
+class DzjRecognizerV2(DzjRecognizerV1):
+
+    def _configure(self):
+        super()._configure()
+
+        # Version of the model
+        self.version_model = 'v2'
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 128 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+        model = models.Sequential()
+        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -200,7 +235,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    recognizer = DzjRecognizerV1()
+    recognizer = DzjRecognizerV2()
 
     recognizer.run(args.dir_dataset, epochs=100)
 
