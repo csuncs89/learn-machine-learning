@@ -46,23 +46,29 @@ class DzjRecognizer(abc.ABC):
     @abc.abstractmethod
     def _configure(self):
         """Configure the recognizer
-
-        Instance fields need to be set:
-        self.w_img: int (Width of the input image)
-        self.h_img: int (Height of the input image)
-        self.invert_img: bool (Whether to invert the input image)
-        self.num_classes: int (Number of classes)
-        self.batch_size: int (Batch size)
-        self.version_model: str (Version of the model)
-        self.local_debug: bool (Whether to enable local debugging)
         """
+        # int (Width of the input image)
         self.w_img = None
+        # int (Height of the input image)
         self.h_img = None
+
+        # bool (Whether to invert the input image)
         self.invert_img = None
+
+        # int (Number of classes)
         self.num_classes = None
+
+        # int (Batch size)
         self.batch_size = None
-        self.version_model = None
+
+        # str (Version of the recognizer)
+        self.version_recognizer = None
+
+        # bool (Whether to enable local debugging)
         self.local_debug = None
+
+        # bool (Whether to normalize input image so that mean is 0)
+        self.normalize_img_mean0 = None
 
     def _load_dir(self, path):
         print('Scanning subdirectory', path)
@@ -100,8 +106,12 @@ class DzjRecognizer(abc.ABC):
             x_test = x_test[:100]
             y_test = y_test[:100]
 
-        x_train = x_train.astype('float32') / 255
-        x_test = x_test.astype('float32') / 255
+        if self.normalize_img_mean0:
+            x_train = (x_train.astype('float32') - 128) / 100.0
+            x_test = (x_test.astype('float32') - 128) / 100.0
+        else:
+            x_train = x_train.astype('float32') / 255
+            x_test = x_test.astype('float32') / 255
         print('x_train.shape:', x_train.shape)
         print('x_test.shape:', x_test.shape)
 
@@ -119,7 +129,7 @@ class DzjRecognizer(abc.ABC):
         self._model = None
 
     def _train(self, epochs):
-        path_weights = os.path.join(self.version_model, 'weights.hdfs')
+        path_weights = os.path.join(self.version_recognizer, 'weights.hdfs')
         if os.path.exists(path_weights):
             self._model.load_weights(path_weights)
             print('Weights are restored from', path_weights)
@@ -129,7 +139,7 @@ class DzjRecognizer(abc.ABC):
                                                         save_best_only=True,
                                                         save_weights_only=True)
 
-        dir_log_tensorboard = os.path.join(self.version_model, 'log_tensorboard')
+        dir_log_tensorboard = os.path.join(self.version_recognizer, 'log_tensorboard')
         if not os.path.exists(dir_log_tensorboard):
             os.makedirs(dir_log_tensorboard)
         callback_tensorboard = callbacks.TensorBoard(log_dir=dir_log_tensorboard)
@@ -153,25 +163,14 @@ class DzjRecognizer(abc.ABC):
 class DzjRecognizerV1(DzjRecognizer):
 
     def _configure(self):
-        # Width of the input image
         self.w_img = 28
-        # Height of the input image
         self.h_img = 28
-
-        # Whether to invert the input image
         self.invert_img = True
-
-        # Number of classes
         self.num_classes = 200
-
-        # Batch size
         self.batch_size = 64
-
-        # Version of the model
-        self.version_model = 'v1'
-
-        # Whether to enable local debugging
+        self.version_recognizer = 'v1'
         self.local_debug = False
+        self.normalize_img_mean0 = False
 
     def _create_model(self):
         """
@@ -201,8 +200,8 @@ class DzjRecognizerV2(DzjRecognizerV1):
     def _configure(self):
         super(DzjRecognizerV2, self)._configure()
 
-        # Version of the model
-        self.version_model = 'v2'
+        # Version of the recognizer
+        self.version_recognizer = 'v2'
 
     def _create_model(self):
         """
@@ -233,8 +232,8 @@ class DzjRecognizerV3(DzjRecognizerV1):
     def _configure(self):
         super(DzjRecognizerV3, self)._configure()
 
-        # Version of the model
-        self.version_model = 'v3'
+        # Version of the recognizer
+        self.version_recognizer = 'v3'
 
     def _create_model(self):
         """
@@ -265,8 +264,8 @@ class DzjRecognizerV4(DzjRecognizerV1):
     def _configure(self):
         super(DzjRecognizerV4, self)._configure()
 
-        # Version of the model
-        self.version_model = 'v4'
+        # Version of the recognizer
+        self.version_recognizer = 'v4'
 
     def _create_model(self):
         """
@@ -299,8 +298,8 @@ class DzjRecognizerV5(DzjRecognizerV1):
     def _configure(self):
         super(DzjRecognizerV5, self)._configure()
 
-        # Version of the model
-        self.version_model = 'v5'
+        # Version of the recognizer
+        self.version_recognizer = 'v5'
 
     def _create_model(self):
         """
@@ -333,8 +332,8 @@ class DzjRecognizerV6(DzjRecognizerV1):
     def _configure(self):
         super(DzjRecognizerV6, self)._configure()
 
-        # Version of the model
-        self.version_model = 'v6'
+        # Version of the recognizer
+        self.version_recognizer = 'v6'
 
     def _create_model(self):
         """
@@ -362,6 +361,17 @@ class DzjRecognizerV6(DzjRecognizerV1):
         self._model = model
 
 
+class DzjRecognizerV7(DzjRecognizerV4):
+
+    def _configure(self):
+        super(DzjRecognizerV7, self)._configure()
+
+        # Version of the recognizer
+        self.version_recognizer = 'v7'
+
+        self.normalize_img_mean0 = True
+
+
 def main():
     args = parse_args()
 
@@ -369,7 +379,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    recognizer = DzjRecognizerV6()
+    recognizer = DzjRecognizerV7()
 
     recognizer.run(args.dir_dataset, epochs=100)
 
