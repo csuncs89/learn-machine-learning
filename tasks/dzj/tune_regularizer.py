@@ -201,10 +201,10 @@ class DzjRecognizerL1Reg(DzjRecognizerBaseline):
 
         model.add(layers.Flatten())
 
-        model.add(layers.Dense(500, kernel_regularizer=regularizers.l1(0.01)))
+        model.add(layers.Dense(500, kernel_regularizer=regularizers.l1(0.001)))
         model.add(layers.Activation('relu'))
 
-        model.add(layers.Dense(500, kernel_regularizer=regularizers.l1(0.01)))
+        model.add(layers.Dense(500, kernel_regularizer=regularizers.l1(0.001)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.Dense(self.num_classes))
@@ -214,7 +214,6 @@ class DzjRecognizerL1Reg(DzjRecognizerBaseline):
                       optimizer=keras.optimizers.Adadelta(),
                       metrics=['accuracy'])
         self._model = model
-
 
 
 def main():
