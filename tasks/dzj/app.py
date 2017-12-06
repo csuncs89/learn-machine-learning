@@ -5,12 +5,14 @@ from __future__ import print_function
 
 import abc
 import argparse
+import json
 import os
 import sys
 
 import cv2
 import keras
 import numpy as np
+import sklearn.utils
 import tensorflow as tf
 from keras import callbacks
 from keras import layers
@@ -39,8 +41,10 @@ class DzjRecognizer(abc.ABC):
 
     def __init__(self):
         self.x_train, self.y_train = None, None
+        self.x_validation, self.y_validation = None, None
         self.x_test, self.y_test = None, None
         self._model = None
+        self._path_weights = None
         self._configure()
 
     @abc.abstractmethod
@@ -70,6 +74,9 @@ class DzjRecognizer(abc.ABC):
         # bool (Whether to normalize input image so that mean is 0)
         self.normalize_img_mean0 = None
 
+        # float (Percent of validation data)
+        self.percent_validation = None
+
     def _load_dir(self, path):
         print('Scanning subdirectory', path)
         imgs = []
@@ -92,12 +99,17 @@ class DzjRecognizer(abc.ABC):
 
     def _load_data(self, dir_dataset):
         dir_train = os.path.join(dir_dataset, 'train')
-        x_train, y_train = self._load_dir(dir_train)
+        x_data, y_data = self._load_dir(dir_train)
+        x_data, y_data = sklearn.utils.shuffle(x_data, y_data, random_state=0)
+        num_validation = int(round(len(x_data) * self.percent_validation))
+        x_train, y_train = x_data[num_validation:], y_data[num_validation:]
+        x_validation, y_validation = x_data[:num_validation], y_data[:num_validation]
 
         dir_test = os.path.join(dir_dataset, 'test')
         x_test, y_test = self._load_dir(dir_test)
 
         x_train = x_train.reshape(x_train.shape[0], self.h_img, self.w_img, 1)
+        x_validation = x_validation.reshape(x_validation.shape[0], self.h_img, self.w_img, 1)
         x_test = x_test.reshape(x_test.shape[0], self.h_img, self.w_img, 1)
 
         if self.local_debug:
@@ -108,17 +120,22 @@ class DzjRecognizer(abc.ABC):
 
         if self.normalize_img_mean0:
             x_train = (x_train.astype('float32') - 128) / 100.0
+            x_validation = (x_validation.astype('float32') - 128) / 100.0
             x_test = (x_test.astype('float32') - 128) / 100.0
         else:
             x_train = x_train.astype('float32') / 255
+            x_validation = x_validation.astype('float32') / 255
             x_test = x_test.astype('float32') / 255
         print('x_train.shape:', x_train.shape)
+        print('x_validation.shape:', x_validation.shape)
         print('x_test.shape:', x_test.shape)
 
         y_train = keras.utils.to_categorical(y_train, self.num_classes)
+        y_validation = keras.utils.to_categorical(y_validation, self.num_classes)
         y_test = keras.utils.to_categorical(y_test, self.num_classes)
 
         self.x_train, self.y_train = x_train, y_train
+        self.x_validation, self.y_validation = x_validation, y_validation
         self.x_test, self.y_test = x_test, y_test
 
     @abc.abstractmethod
@@ -128,13 +145,20 @@ class DzjRecognizer(abc.ABC):
         """
         self._model = None
 
-    def _train(self, epochs):
+    def _set_path_weights(self):
         path_weights = os.path.join(self.version_recognizer, 'weights.hdfs')
-        if os.path.exists(path_weights):
-            self._model.load_weights(path_weights)
-            print('Weights are restored from', path_weights)
+        self._path_weights = path_weights
 
-        callback_checkpoint = callbacks.ModelCheckpoint(filepath=path_weights,
+    def _load_weights(self):
+        if self._path_weights is None:
+            self._set_path_weights()
+        if os.path.exists(self._path_weights):
+            self._model.load_weights(self._path_weights)
+            print('Weights are restored from', self._path_weights)
+
+    def _train(self, epochs):
+        self._load_weights()
+        callback_checkpoint = callbacks.ModelCheckpoint(filepath=self._path_weights,
                                                         verbose=1,
                                                         save_best_only=True,
                                                         save_weights_only=True)
@@ -148,16 +172,24 @@ class DzjRecognizer(abc.ABC):
                         batch_size=self.batch_size,
                         epochs=epochs,
                         verbose=1,
-                        validation_data=(self.x_test, self.y_test),
+                        validation_data=(self.x_validation, self.y_validation),
                         callbacks=[callback_checkpoint, callback_tensorboard])
+
+    def _evaluate(self):
+        self._load_weights()
         score = self._model.evaluate(self.x_test, self.y_test, verbose=0)
+        path_test_results = os.path.join(self.version_recognizer, 'test_results.json')
+        json.dump({'test_loss': score[0], 'test_accuracy': score[1]},
+                  open(path_test_results, 'w'), indent=4, sort_keys=True)
         print('Test loss:', score[0])
         print('Test accuracy', score[1])
 
     def run(self, dir_dataset, epochs):
+        print('Run recognizer {0} ...'.format(self.version_recognizer))
         self._load_data(dir_dataset)
         self._create_model()
         self._train(epochs=epochs)
+        self._evaluate()
 
 
 class DzjRecognizerV1(DzjRecognizer):
@@ -171,6 +203,7 @@ class DzjRecognizerV1(DzjRecognizer):
         self.version_recognizer = 'v1'
         self.local_debug = False
         self.normalize_img_mean0 = False
+        self.percent_validation = 0.1
 
     def _create_model(self):
         """
@@ -455,9 +488,10 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    recognizer = DzjRecognizerV9()
-
-    recognizer.run(args.dir_dataset, epochs=100)
+    for id_recognizer in range(1, 10):
+        name_class = 'DzjRecognizerV' + str(id_recognizer)
+        recognizer = globals()[name_class]()
+        recognizer.run(args.dir_dataset, epochs=100)
 
 
 if __name__ == '__main__':
