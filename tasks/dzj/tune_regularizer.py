@@ -171,6 +171,7 @@ class DzjRecognizerL2RegConv(DzjRecognizerBaseline):
                       metrics=['accuracy'])
         self._model = model
 
+
 def main():
     args = parse_args()
 
@@ -178,11 +179,10 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    # recognizer1 = DzjRecognizerBaseline()
-    # recognizer1.run(args.dir_dataset, epochs=100)
-
-    recognizer2 = DzjRecognizerL2Reg()
-    recognizer2.run(args.dir_dataset, epochs=100)
+    for k, c in globals().items():
+        if k.startswith('DzjRecognizer'):
+            recognizer = c()
+            recognizer.run(args.dir_dataset, epochs=100)
 
 
 if __name__ == '__main__':
