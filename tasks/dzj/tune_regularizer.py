@@ -98,15 +98,15 @@ class DzjRecognizerL2Reg(DzjRecognizerBaseline):
 
         model = models.Sequential()
 
-        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape, kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape))
         model.add(layers.Activation('relu'))
 
-        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Conv2D(64, (3, 3)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
 
-        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Conv2D(64, (3, 3)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
