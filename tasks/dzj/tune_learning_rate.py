@@ -42,11 +42,8 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
         self.percent_validation = 0.1
         self.dir_base = os.path.abspath(__file__)[:-3]
 
-    def _compile(self):
-        optimizer = keras.optimizers.Adadelta()
-        self._model.compile(loss=keras.losses.categorical_crossentropy,
-                            optimizer=keras.optimizers.Adadelta(),
-                            metrics=['accuracy'])
+    def _set_optimizer(self):
+        self._optimizer = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 
     def _create_model(self):
         """
@@ -80,8 +77,12 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
         model.add(layers.Dense(self.num_classes))
         model.add(layers.Activation('softmax'))
 
+        self._set_optimizer()
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=self._optimizer,
+                      metrics=['accuracy'])
         self._model = model
-        self._compile()
 
 
 class DzjRecognizerFast(DzjRecognizerBaseline):
@@ -90,11 +91,8 @@ class DzjRecognizerFast(DzjRecognizerBaseline):
         super(DzjRecognizerFast, self)._configure()
         self.version_recognizer = 'fast'
 
-    def _compile(self):
-        optimizer = keras.optimizers.Adadelta(lr=3.0)
-        self._model.compile(loss=keras.losses.categorical_crossentropy,
-                            optimizer=keras.optimizers.Adadelta(),
-                            metrics=['accuracy'])
+    def _set_optimizer(self):
+        self._optimizer = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
 
 
 class DzjRecognizerSlow(DzjRecognizerBaseline):
@@ -103,11 +101,8 @@ class DzjRecognizerSlow(DzjRecognizerBaseline):
         super(DzjRecognizerSlow, self)._configure()
         self.version_recognizer = 'slow'
 
-    def _compile(self):
-        optimizer = keras.optimizers.Adadelta(lr=0.3)
-        self._model.compile(loss=keras.losses.categorical_crossentropy,
-                            optimizer=keras.optimizers.Adadelta(),
-                            metrics=['accuracy'])
+    def _set_optimizer(self):
+        self._optimizer = keras.optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 
 
 def main():
