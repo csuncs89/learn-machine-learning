@@ -155,7 +155,7 @@ class DzjRecognizer(abc.ABC):
     def _evaluate(self):
         self._load_weights()
         score = self._model.evaluate(self.x_test, self.y_test, verbose=0)
-        path_test_results = os.path.join(self.version_recognizer, 'test_results.json')
+        path_test_results = os.path.join(self.dir_base, self.version_recognizer, 'test_results.json')
         json.dump({'test_loss': score[0], 'test_accuracy': score[1]},
                   open(path_test_results, 'w'), indent=4, sort_keys=True)
         print('Test loss:', score[0])
