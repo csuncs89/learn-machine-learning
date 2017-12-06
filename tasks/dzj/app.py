@@ -481,6 +481,59 @@ class DzjRecognizerV9(DzjRecognizerV1):
         self._model = model
 
 
+class DzjRecognizerV10(DzjRecognizerV1):
+    def _configure(self):
+        super(DzjRecognizerV10, self)._configure()
+
+        # Version of the recognizer
+        self.version_recognizer = 'v10'
+
+        self.normalize_img_mean0 = True
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Conv2D(64, (3, 3)))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(500, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(500, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(self.num_classes, activation='softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adadelta(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
@@ -488,7 +541,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    for id_recognizer in range(1, 10):
+    for id_recognizer in range(10, 11):
         name_class = 'DzjRecognizerV' + str(id_recognizer)
         recognizer = globals()[name_class]()
         recognizer.run(args.dir_dataset, epochs=100)
