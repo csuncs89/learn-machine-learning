@@ -9,6 +9,7 @@ import keras
 import tensorflow as tf
 from keras import models
 from keras import layers
+from keras import regularizers
 
 from tasks.dzj import dzj_model
 
@@ -83,6 +84,50 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
         self._model = model
 
 
+class DzjRecognizerL2Reg(DzjRecognizerBaseline):
+
+    def _configure(self):
+        super(DzjRecognizerL2Reg, self)._configure()
+        self.version_recognizer = 'l2_reg'
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape, kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+
+        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(500, kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Dense(500, kernel_regularizer=regularizers.l2(0.01)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Dense(self.num_classes))
+        model.add(layers.Activation('softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adadelta(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
@@ -92,6 +137,9 @@ def main():
 
     recognizer1 = DzjRecognizerBaseline()
     recognizer1.run(args.dir_dataset, epochs=100)
+
+    recognizer2 = DzjRecognizerL2Reg()
+    recognizer2.run(args.dir_dataset, epochs=100)
 
 
 if __name__ == '__main__':
