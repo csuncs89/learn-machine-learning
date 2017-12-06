@@ -185,6 +185,11 @@ class DzjRecognizer(abc.ABC):
         print('Test accuracy', score[1])
 
     def run(self, dir_dataset, epochs):
+        if os.path.exists(self.version_recognizer):
+            print('Result directory {0} exists, skip run recognizer {1}'
+                  .format(self.version_recognizer, self.version_recognizer))
+            return
+
         print('Run recognizer {0} ...'.format(self.version_recognizer))
         self._load_data(dir_dataset)
         self._create_model()
@@ -541,7 +546,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    for id_recognizer in range(10, 11):
+    for id_recognizer in range(1, 11):
         name_class = 'DzjRecognizerV' + str(id_recognizer)
         recognizer = globals()[name_class]()
         recognizer.run(args.dir_dataset, epochs=100)
