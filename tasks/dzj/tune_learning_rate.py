@@ -12,7 +12,7 @@ from tasks.dzj import dzj_model
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description='Tune regularizer'
+        description='Tune learning rate'
     )
     parser.add_argument(
         'dir_dataset',
