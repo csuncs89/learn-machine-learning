@@ -135,6 +135,56 @@ class DzjRecognizerDropout(DzjRecognizerBaseline):
         self._model = model
 
 
+class DzjRecognizerDropout2(DzjRecognizerBaseline):
+
+    def _configure(self):
+        super(DzjRecognizerDropout2, self)._configure()
+        self.version_recognizer = 'dropout2'
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Conv2D(64, (3, 3)))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(500))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(500))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(self.num_classes))
+        model.add(layers.Activation('softmax'))
+
+        self._set_optimizer()
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=self._optimizer,
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
