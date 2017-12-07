@@ -44,7 +44,8 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
                                      os.path.basename(__file__)[:-3])
 
     def _set_optimizer(self):
-        self._optimizer = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+        self._optimizer = keras.optimizers.SGD(lr=0.01, decay=1e-6,
+                                               momentum=0.9, nesterov=True)
 
     def _create_model(self):
         """

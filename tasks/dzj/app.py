@@ -79,7 +79,8 @@ class DzjRecognizerV2(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -105,7 +106,8 @@ class DzjRecognizerV3(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -131,7 +133,8 @@ class DzjRecognizerV4(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -159,7 +162,8 @@ class DzjRecognizerV5(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -187,7 +191,8 @@ class DzjRecognizerV6(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
         model.add(layers.Dropout(0.25))
@@ -226,7 +231,8 @@ class DzjRecognizerV8(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
@@ -259,7 +265,8 @@ class DzjRecognizerV9(DzjRecognizerV1):
         """
         input_shape = (self.h_img, self.w_img, 1)
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        model.add(layers.Conv2D(32, (3, 3), activation='relu',
+                                input_shape=input_shape))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
@@ -296,7 +303,8 @@ class DzjRecognizerV10(DzjRecognizerV1):
 
         model = models.Sequential()
 
-        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape, use_bias=False))
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape,
+                                use_bias=False))
         model.add(layers.BatchNormalization(axis=-1))
         model.add(layers.Activation('relu'))
 

@@ -80,13 +80,15 @@ class DzjRecognizer(abc.ABC):
         x_data, y_data = sklearn.utils.shuffle(x_data, y_data, random_state=0)
         num_validation = int(round(len(x_data) * self.percent_validation))
         x_train, y_train = x_data[num_validation:], y_data[num_validation:]
-        x_validation, y_validation = x_data[:num_validation], y_data[:num_validation]
+        x_validation, y_validation = \
+            x_data[:num_validation], y_data[:num_validation]
 
         dir_test = os.path.join(dir_dataset, 'test')
         x_test, y_test = self._load_dir(dir_test)
 
         x_train = x_train.reshape(x_train.shape[0], self.h_img, self.w_img, 1)
-        x_validation = x_validation.reshape(x_validation.shape[0], self.h_img, self.w_img, 1)
+        x_validation = x_validation.reshape(x_validation.shape[0], self.h_img,
+                                            self.w_img, 1)
         x_test = x_test.reshape(x_test.shape[0], self.h_img, self.w_img, 1)
 
         if self.local_debug:
@@ -108,7 +110,8 @@ class DzjRecognizer(abc.ABC):
         print('x_test.shape:', x_test.shape)
 
         y_train = keras.utils.to_categorical(y_train, self.num_classes)
-        y_validation = keras.utils.to_categorical(y_validation, self.num_classes)
+        y_validation = keras.utils.to_categorical(y_validation,
+                                                  self.num_classes)
         y_test = keras.utils.to_categorical(y_test, self.num_classes)
 
         self.x_train, self.y_train = x_train, y_train
@@ -123,7 +126,8 @@ class DzjRecognizer(abc.ABC):
         self._model = None
 
     def _set_path_weights(self):
-        path_weights = os.path.join(self.dir_base, self.version_recognizer, 'weights.hdfs')
+        path_weights = os.path.join(self.dir_base, self.version_recognizer,
+                                    'weights.hdfs')
         self._path_weights = path_weights
 
     def _load_weights(self):
@@ -135,15 +139,19 @@ class DzjRecognizer(abc.ABC):
 
     def _train(self, epochs):
         self._load_weights()
-        callback_checkpoint = callbacks.ModelCheckpoint(filepath=self._path_weights,
-                                                        verbose=1,
-                                                        save_best_only=True,
-                                                        save_weights_only=True)
+        callback_checkpoint = callbacks.ModelCheckpoint(
+            filepath=self._path_weights,
+            verbose=1,
+            save_best_only=True,
+            save_weights_only=True)
 
-        dir_log_tensorboard = os.path.join(self.dir_base, self.version_recognizer, 'log_tensorboard')
+        dir_log_tensorboard = os.path.join(self.dir_base,
+                                           self.version_recognizer,
+                                           'log_tensorboard')
         if not os.path.exists(dir_log_tensorboard):
             os.makedirs(dir_log_tensorboard)
-        callback_tensorboard = callbacks.TensorBoard(log_dir=dir_log_tensorboard)
+        callback_tensorboard = callbacks.TensorBoard(
+            log_dir=dir_log_tensorboard)
 
         self._model.fit(self.x_train, self.y_train,
                         batch_size=self.batch_size,
@@ -155,7 +163,8 @@ class DzjRecognizer(abc.ABC):
     def _evaluate(self):
         self._load_weights()
         score = self._model.evaluate(self.x_test, self.y_test, verbose=0)
-        path_test_results = os.path.join(self.dir_base, self.version_recognizer, 'test_results.json')
+        path_test_results = os.path.join(self.dir_base, self.version_recognizer,
+                                         'test_results.json')
         json.dump({'test_loss': score[0], 'test_accuracy': score[1]},
                   open(path_test_results, 'w'), indent=4, sort_keys=True)
         print('Test loss:', score[0])

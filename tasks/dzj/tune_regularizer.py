@@ -139,12 +139,14 @@ class DzjRecognizerL2RegConv(DzjRecognizerBaseline):
                                 kernel_regularizer=regularizers.l2(0.001)))
         model.add(layers.Activation('relu'))
 
-        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.001)))
+        model.add(layers.Conv2D(64, (3, 3),
+                                kernel_regularizer=regularizers.l2(0.001)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
 
-        model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.001)))
+        model.add(layers.Conv2D(64, (3, 3),
+                                kernel_regularizer=regularizers.l2(0.001)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.MaxPool2D(pool_size=(2, 2)))
