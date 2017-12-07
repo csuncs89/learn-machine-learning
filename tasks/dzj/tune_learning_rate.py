@@ -36,11 +36,12 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
         self.invert_img = True
         self.num_classes = 200
         self.batch_size = 64
-        self.version_recognizer = 'baseline'
+        self.version_recognizer = self.__class__.__name__[len('DzjRecognizer'):]
         self.local_debug = False
         self.normalize_img_mean0 = False
         self.percent_validation = 0.1
-        self.dir_base = os.path.abspath(__file__)[:-3]
+        self.dir_base = os.path.join(os.getenv('HOME'), 'dzj_results',
+                                     os.path.basename(__file__)[:-3])
 
     def _set_optimizer(self):
         self._optimizer = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
@@ -87,19 +88,11 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
 
 class DzjRecognizerFast(DzjRecognizerBaseline):
 
-    def _configure(self):
-        super(DzjRecognizerFast, self)._configure()
-        self.version_recognizer = 'fast'
-
     def _set_optimizer(self):
         self._optimizer = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
 
 
 class DzjRecognizerSlow(DzjRecognizerBaseline):
-
-    def _configure(self):
-        super(DzjRecognizerSlow, self)._configure()
-        self.version_recognizer = 'slow'
 
     def _set_optimizer(self):
         self._optimizer = keras.optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)

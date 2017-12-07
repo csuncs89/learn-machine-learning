@@ -41,11 +41,12 @@ class DzjRecognizerV1(dzj_model.DzjRecognizer):
         self.invert_img = True
         self.num_classes = 200
         self.batch_size = 64
-        self.version_recognizer = 'v1'
+        self.version_recognizer = self.__class__.__name__[len('DzjRecognizer'):]
         self.local_debug = False
         self.normalize_img_mean0 = False
         self.percent_validation = 0.1
-        self.dir_base = os.path.abspath(__file__)[:-3]
+        self.dir_base = os.path.join(os.getenv('HOME'), 'dzj_results',
+                                     os.path.basename(__file__)[:-3])
 
     def _create_model(self):
         """
@@ -71,12 +72,6 @@ class DzjRecognizerV1(dzj_model.DzjRecognizer):
 
 
 class DzjRecognizerV2(DzjRecognizerV1):
-
-    def _configure(self):
-        super(DzjRecognizerV2, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v2'
 
     def _create_model(self):
         """
@@ -104,12 +99,6 @@ class DzjRecognizerV2(DzjRecognizerV1):
 
 class DzjRecognizerV3(DzjRecognizerV1):
 
-    def _configure(self):
-        super(DzjRecognizerV3, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v3'
-
     def _create_model(self):
         """
         3x3x32 3x3x64 2x2 3x3x64 2x2 500 200
@@ -135,12 +124,6 @@ class DzjRecognizerV3(DzjRecognizerV1):
 
 
 class DzjRecognizerV4(DzjRecognizerV1):
-
-    def _configure(self):
-        super(DzjRecognizerV4, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v4'
 
     def _create_model(self):
         """
@@ -170,12 +153,6 @@ class DzjRecognizerV4(DzjRecognizerV1):
 
 class DzjRecognizerV5(DzjRecognizerV1):
 
-    def _configure(self):
-        super(DzjRecognizerV5, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v5'
-
     def _create_model(self):
         """
         3x3x32 3x3x64 2x2 3x3x64 2x2 128 128 200
@@ -203,12 +180,6 @@ class DzjRecognizerV5(DzjRecognizerV1):
 
 
 class DzjRecognizerV6(DzjRecognizerV1):
-
-    def _configure(self):
-        super(DzjRecognizerV6, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v6'
 
     def _create_model(self):
         """
@@ -240,10 +211,6 @@ class DzjRecognizerV7(DzjRecognizerV4):
 
     def _configure(self):
         super(DzjRecognizerV7, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v7'
-
         self.normalize_img_mean0 = True
 
 
@@ -251,10 +218,6 @@ class DzjRecognizerV8(DzjRecognizerV1):
 
     def _configure(self):
         super(DzjRecognizerV8, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v8'
-
         self.normalize_img_mean0 = True
 
     def _create_model(self):
@@ -288,10 +251,6 @@ class DzjRecognizerV9(DzjRecognizerV1):
 
     def _configure(self):
         super(DzjRecognizerV9, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v9'
-
         self.normalize_img_mean0 = True
 
     def _create_model(self):
@@ -327,10 +286,6 @@ class DzjRecognizerV10(DzjRecognizerV1):
 
     def _configure(self):
         super(DzjRecognizerV10, self)._configure()
-
-        # Version of the recognizer
-        self.version_recognizer = 'v10'
-
         self.normalize_img_mean0 = True
 
     def _create_model(self):

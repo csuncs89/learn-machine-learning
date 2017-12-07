@@ -40,11 +40,12 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
         self.invert_img = True
         self.num_classes = 200
         self.batch_size = 64
-        self.version_recognizer = 'baseline'
+        self.version_recognizer = self.__class__.__name__[len('DzjRecognizer'):]
         self.local_debug = False
         self.normalize_img_mean0 = False
         self.percent_validation = 0.1
-        self.dir_base = os.path.abspath(__file__)[:-3]
+        self.dir_base = os.path.join(os.getenv('HOME'), 'dzj_results',
+                                     os.path.basename(__file__)[:-3])
 
     def _create_model(self):
         """
@@ -86,10 +87,6 @@ class DzjRecognizerBaseline(dzj_model.DzjRecognizer):
 
 class DzjRecognizerL2Reg(DzjRecognizerBaseline):
 
-    def _configure(self):
-        super(DzjRecognizerL2Reg, self)._configure()
-        self.version_recognizer = 'l2_reg'
-
     def _create_model(self):
         """
         3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
@@ -130,10 +127,6 @@ class DzjRecognizerL2Reg(DzjRecognizerBaseline):
 
 class DzjRecognizerL2RegConv(DzjRecognizerBaseline):
 
-    def _configure(self):
-        super(DzjRecognizerL2RegConv, self)._configure()
-        self.version_recognizer = 'l2_reg_conv'
-
     def _create_model(self):
         """
         3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
@@ -142,7 +135,8 @@ class DzjRecognizerL2RegConv(DzjRecognizerBaseline):
 
         model = models.Sequential()
 
-        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape, kernel_regularizer=regularizers.l2(0.001)))
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape,
+                                kernel_regularizer=regularizers.l2(0.001)))
         model.add(layers.Activation('relu'))
 
         model.add(layers.Conv2D(64, (3, 3), kernel_regularizer=regularizers.l2(0.001)))
@@ -173,10 +167,6 @@ class DzjRecognizerL2RegConv(DzjRecognizerBaseline):
 
 
 class DzjRecognizerL1Reg(DzjRecognizerBaseline):
-
-    def _configure(self):
-        super(DzjRecognizerL1Reg, self)._configure()
-        self.version_recognizer = 'l1_reg'
 
     def _create_model(self):
         """
