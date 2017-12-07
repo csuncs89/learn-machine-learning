@@ -237,6 +237,56 @@ class DzjRecognizerBatchNormDropoutAdadelta(DzjRecognizerBaseline):
         self._model = model
 
 
+class DzjRecognizerBatchNormDropoutAdadelta2(DzjRecognizerBaseline):
+
+    def _create_model(self):
+        """
+        3x3x32 3x3x64 2x2 3x3x64 2x2 500 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(32, (3, 3), input_shape=input_shape,
+                                use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Conv2D(64, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(500, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(500, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(self.num_classes))
+        model.add(layers.Activation('softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adadelta(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
