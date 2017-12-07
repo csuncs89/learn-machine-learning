@@ -179,10 +179,8 @@ class DzjRecognizerBatchNormDropout(DzjRecognizerBaseline):
         model.add(layers.Dense(self.num_classes))
         model.add(layers.Activation('softmax'))
 
-        self._set_optimizer()
-
         model.compile(loss=keras.losses.categorical_crossentropy,
-                      optimizer=self._optimizer,
+                      optimizer=keras.optimizers.Adadelta(),
                       metrics=['accuracy'])
         self._model = model
 
