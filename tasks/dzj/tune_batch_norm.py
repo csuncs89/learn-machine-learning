@@ -287,6 +287,15 @@ class DzjRecognizerBatchNormDropoutAdadelta2(DzjRecognizerBaseline):
         self._model = model
 
 
+class DzjRecognizerLargeInput(DzjRecognizerBatchNormDropoutAdadelta2):
+
+    def _configure(self):
+        super(DzjRecognizerLargeInput, self)._configure()
+
+        self.w_img = 52
+        self.h_img = 52
+
+
 def main():
     args = parse_args()
 
@@ -294,7 +303,7 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    recognizer = DzjRecognizerBatchNormDropoutAdadelta2()
+    recognizer = DzjRecognizerLargeInput()
     recognizer.run(args.dir_dataset, epochs=100)
 
     # recognizer = DzjRecognizerBatchNormDropoutAdadelta2()

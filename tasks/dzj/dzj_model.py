@@ -118,7 +118,7 @@ class DzjRecognizer(abc.ABC):
     def _load_data(self, dir_dataset):
         dir_train = os.path.join(dir_dataset, 'train')
         x_data, y_data, md5_data = self._load_dir(dir_train)
-        assert(md5_data == 'c2350a4dff799934bcfa5be7193dd91e')
+        assert (md5_data == 'c2350a4dff799934bcfa5be7193dd91e')
         x_data, y_data = sklearn.utils.shuffle(x_data, y_data, random_state=0)
         num_validation = int(round(len(x_data) * self.percent_validation))
         x_train, y_train = x_data[num_validation:], y_data[num_validation:]
@@ -127,7 +127,7 @@ class DzjRecognizer(abc.ABC):
 
         dir_test = os.path.join(dir_dataset, 'test')
         x_test, y_test, md5_test = self._load_dir(dir_test)
-        assert(md5_test == '4a19afda4bd091b6d746166b57859267')
+        assert (md5_test == '4a19afda4bd091b6d746166b57859267')
 
         x_train = x_train.reshape(x_train.shape[0], self.h_img, self.w_img, 1)
         x_validation = x_validation.reshape(x_validation.shape[0], self.h_img,
@@ -241,6 +241,8 @@ class DzjRecognizer(abc.ABC):
         val_loss, val_acc = self._model.evaluate(self.x_validation,
                                                  self.y_validation,
                                                  verbose=1)
+        print('Validation accuracy: {0}'.format(val_acc))
+        print('Validation error rate: {0}'.format(1 - val_acc))
         print('Number of incorrect predictions: {0}'
               .format(len(self.x_validation) * (1 - val_acc)))
 
