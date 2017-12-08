@@ -1,14 +1,45 @@
 from __future__ import print_function
 
 import abc
+import hashlib
 import json
 import os
+import sys
 
 import cv2
 import keras
 import numpy as np
 import sklearn.utils
 from keras import callbacks
+
+
+def normal_show(win_name, img):
+    """Show image in a normal window
+
+    @param win_name: Window name
+    @param img: The image
+    """
+    cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
+    cv2.imshow(win_name, img)
+
+
+def normal_show_wait_esc(win_name, img):
+    """Show image in a normal window and wait for key, ESC to exit
+
+    @param win_name: Window name
+    @param img: The image
+    """
+    normal_show(win_name, img)
+    wait_esc()
+
+
+def wait_esc():
+    """Wait for key, ESC to exit
+    """
+    key = cv2.waitKey()
+    if key == 27:
+        sys.exit(0)
+    return key
 
 
 class DzjRecognizer(abc.ABC):
@@ -58,13 +89,14 @@ class DzjRecognizer(abc.ABC):
         print('Scanning subdirectory', path)
         imgs = []
         labels = []
-        for name_label in os.listdir(path):
+        names = []
+        for name_label in sorted(os.listdir(path)):
             if not name_label.isdigit():
                 continue
             label = int(name_label)
             path1 = os.path.join(path, name_label)
 
-            for name_img in os.listdir(path1):
+            for name_img in sorted(os.listdir(path1)):
                 path_img = os.path.join(path1, name_img)
                 img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
                 img = cv2.resize(img, (self.w_img, self.h_img))
@@ -72,11 +104,21 @@ class DzjRecognizer(abc.ABC):
                     img = 255 - img
                 imgs.append(img)
                 labels.append(label)
-        return np.array(imgs), np.array(labels)
+
+                names.append(name_label + name_img)
+
+        m = hashlib.md5()
+        print('Length of names: {0}'.format(len(names)))
+        m.update(''.join(names).encode('utf-8'))
+        val_md5 = m.hexdigest()
+        print(val_md5)
+
+        return np.array(imgs), np.array(labels), val_md5
 
     def _load_data(self, dir_dataset):
         dir_train = os.path.join(dir_dataset, 'train')
-        x_data, y_data = self._load_dir(dir_train)
+        x_data, y_data, md5_data = self._load_dir(dir_train)
+        assert(md5_data == 'c2350a4dff799934bcfa5be7193dd91e')
         x_data, y_data = sklearn.utils.shuffle(x_data, y_data, random_state=0)
         num_validation = int(round(len(x_data) * self.percent_validation))
         x_train, y_train = x_data[num_validation:], y_data[num_validation:]
@@ -84,7 +126,8 @@ class DzjRecognizer(abc.ABC):
             x_data[:num_validation], y_data[:num_validation]
 
         dir_test = os.path.join(dir_dataset, 'test')
-        x_test, y_test = self._load_dir(dir_test)
+        x_test, y_test, md5_test = self._load_dir(dir_test)
+        assert(md5_test == '4a19afda4bd091b6d746166b57859267')
 
         x_train = x_train.reshape(x_train.shape[0], self.h_img, self.w_img, 1)
         x_validation = x_validation.reshape(x_validation.shape[0], self.h_img,
@@ -188,3 +231,37 @@ class DzjRecognizer(abc.ABC):
         self._create_model()
         print(self._model.summary())
         print(self._model.to_yaml())
+
+    def validate_in_detail(self, dir_dataset):
+        self._load_data(dir_dataset)
+        self._create_model()
+        self._load_weights()
+
+        print('Evaluate on the validation set')
+        val_loss, val_acc = self._model.evaluate(self.x_validation,
+                                                 self.y_validation,
+                                                 verbose=1)
+        print('Number of incorrect predictions: {0}'
+              .format(len(self.x_validation) * (1 - val_acc)))
+
+        y_validation_pred = np.argmax(self._model.predict(self.x_validation),
+                                      axis=1)
+        y_validation = np.argmax(self.y_validation, axis=1)
+
+        print(y_validation_pred.shape)
+        print(y_validation.shape)
+
+        for i, (y_gt, y_pred) in enumerate(zip(y_validation,
+                                               y_validation_pred)):
+            if y_gt != y_pred:
+                x = self.x_validation[i]
+                img = np.asarray(255 - (x * 255.0), np.uint8)
+                print('predicated label {0} != gt label {1}'
+                      .format(y_pred, y_gt))
+
+                dir_train = os.path.join(dir_dataset, 'train', str(y_pred))
+                path_train = os.path.join(dir_train, os.listdir(dir_train)[1])
+                print(path_train)
+                normal_show('img_pred', cv2.imread(path_train,
+                                                   cv2.IMREAD_GRAYSCALE))
+                normal_show_wait_esc('img', img)

@@ -294,6 +294,11 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
+    recognizer = DzjRecognizerBatchNormDropoutAdadelta2()
+    recognizer.validate_in_detail(args.dir_dataset)
+
+    return
+
     for k, c in globals().items():
         if k.startswith('DzjRecognizer'):
             recognizer = c()
