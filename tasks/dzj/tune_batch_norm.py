@@ -295,12 +295,10 @@ def main():
     sess = tf.Session(config=tfconfig)
 
     recognizer = DzjRecognizerBatchNormDropoutAdadelta2()
-    recognizer.run(args.dir_dataset, epochs=50)
+    recognizer.run(args.dir_dataset, epochs=100)
 
-    return
-
-    recognizer = DzjRecognizerBatchNormDropoutAdadelta2()
-    recognizer.validate_in_detail(args.dir_dataset)
+    # recognizer = DzjRecognizerBatchNormDropoutAdadelta2()
+    # recognizer.validate_in_detail(args.dir_dataset)
 
     return
 
