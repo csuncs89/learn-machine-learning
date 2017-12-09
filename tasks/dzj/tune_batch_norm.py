@@ -510,7 +510,8 @@ def main():
     tfconfig.gpu_options.allow_growth = True
     sess = tf.Session(config=tfconfig)
 
-    for recognizerClass in [DzjRecognizerConvLayers4]:
+    for recognizerClass in [DzjRecognizerConvLayers4,
+                            DzjRecognizerConv4MoreFilers]:
         recognizer = recognizerClass()
         recognizer.run(args.dir_dataset, epochs=100)
         recognizer.train_full_train_data(args.dir_dataset, epochs=2)
