@@ -513,8 +513,8 @@ def main():
     for recognizerClass in [DzjRecognizerConvLayers4,
                             DzjRecognizerConv4MoreFilers]:
         recognizer = recognizerClass()
-        recognizer.run(args.dir_dataset, epochs=100)
-        recognizer.train_full_train_data(args.dir_dataset, epochs=2)
+        recognizer.run(args.dir_dataset, epochs=200)
+        recognizer.train_full_train_data(args.dir_dataset, epochs=5)
 
     # recognizer = DzjRecognizerLargeInput()
     # recognizer.run(args.dir_dataset, epochs=100)
