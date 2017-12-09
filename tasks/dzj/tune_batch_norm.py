@@ -611,8 +611,8 @@ def main():
                             DzjRecognizerConv4MoreFilers,
                             DzjRecognizerConv4MoreFilers2]:
         recognizer = recognizerClass()
-        recognizer.run(args.dir_dataset, epochs=300)
-        recognizer.train_full_train_data(args.dir_dataset, epochs=5)
+        recognizer.run(args.dir_dataset, epochs=30)
+        recognizer.train_full_train_data(args.dir_dataset, epochs=2)
 
     # recognizer = DzjRecognizerLargeInput()
     # recognizer.run(args.dir_dataset, epochs=100)
