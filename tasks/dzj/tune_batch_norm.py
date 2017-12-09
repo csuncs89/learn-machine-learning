@@ -448,7 +448,6 @@ class DzjRecognizerConvLayers4(DzjRecognizerBaseline):
         self._model = model
 
 
-
 class DzjRecognizerConv4MoreFilers(DzjRecognizerBaseline):
 
     def _create_model(self):
@@ -503,6 +502,104 @@ class DzjRecognizerConv4MoreFilers(DzjRecognizerBaseline):
         self._model = model
 
 
+class DzjRecognizerConv4MoreFilers2(DzjRecognizerBaseline):
+
+    def _create_model(self):
+        """
+        3x3x64 3x3x64 2x2 3x3x128 3x3x128 2x2 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(64, (3, 3), input_shape=input_shape,
+                                use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Conv2D(128, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(128, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(500, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(self.num_classes))
+        model.add(layers.Activation('softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adam(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
+class DzjRecognizerConv4MoreFilers3(DzjRecognizerBaseline):
+
+    def _create_model(self):
+        """
+        3x3x64 3x3x64 2x2 3x3x128 3x3x128 2x2 500 200
+        """
+        input_shape = (self.h_img, self.w_img, 1)
+
+        model = models.Sequential()
+
+        model.add(layers.Conv2D(64, (3, 3), input_shape=input_shape,
+                                use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(64, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Conv2D(128, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.Conv2D(128, (3, 3), use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+
+        model.add(layers.MaxPool2D(pool_size=(2, 2)))
+        model.add(layers.Dropout(0.25))
+
+        model.add(layers.Flatten())
+
+        model.add(layers.Dense(1024, use_bias=False))
+        model.add(layers.BatchNormalization(axis=-1))
+        model.add(layers.Activation('relu'))
+        model.add(layers.Dropout(0.5))
+
+        model.add(layers.Dense(self.num_classes))
+        model.add(layers.Activation('softmax'))
+
+        model.compile(loss=keras.losses.categorical_crossentropy,
+                      optimizer=keras.optimizers.Adam(),
+                      metrics=['accuracy'])
+        self._model = model
+
+
 def main():
     args = parse_args()
 
@@ -511,9 +608,10 @@ def main():
     sess = tf.Session(config=tfconfig)
 
     for recognizerClass in [DzjRecognizerConvLayers4,
-                            DzjRecognizerConv4MoreFilers]:
+                            DzjRecognizerConv4MoreFilers,
+                            DzjRecognizerConv4MoreFilers2]:
         recognizer = recognizerClass()
-        recognizer.run(args.dir_dataset, epochs=200)
+        recognizer.run(args.dir_dataset, epochs=300)
         recognizer.train_full_train_data(args.dir_dataset, epochs=5)
 
     # recognizer = DzjRecognizerLargeInput()
