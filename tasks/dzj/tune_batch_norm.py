@@ -460,7 +460,8 @@ def main():
                             DzjRecognizerBatchNormDropoutAdam,
                             DzjRecognizerConvLayers4]:
         recognizer = recognizerClass()
-        recognizer.run(args.dir_dataset, epochs=100)
+        # recognizer.run(args.dir_dataset, epochs=100)
+        recognizer.train_full_train_data(args.dir_dataset)
 
     # recognizer = DzjRecognizerLargeInput()
     # recognizer.run(args.dir_dataset, epochs=100)

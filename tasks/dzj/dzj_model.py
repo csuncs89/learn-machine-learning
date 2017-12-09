@@ -203,7 +203,7 @@ class DzjRecognizer(abc.ABC):
                         validation_data=(self.x_validation, self.y_validation),
                         callbacks=[callback_checkpoint, callback_tensorboard])
 
-    def _evaluate(self):
+    def _evaluate_test_set(self):
         self._load_weights()
         score = self._model.evaluate(self.x_test, self.y_test, verbose=0)
         path_test_results = os.path.join(self.dir_base, self.version_recognizer,
@@ -224,7 +224,7 @@ class DzjRecognizer(abc.ABC):
         self._load_data(dir_dataset)
         self._create_model()
         self._train(epochs=epochs)
-        self._evaluate()
+        self._evaluate_test_set()
 
     def print_model_arch(self):
         print('Model definition:')
@@ -267,3 +267,17 @@ class DzjRecognizer(abc.ABC):
                 normal_show('img_pred', cv2.imread(path_train,
                                                    cv2.IMREAD_GRAYSCALE))
                 normal_show_wait_esc('img', img)
+
+    def train_full_train_data(self, dir_dataset):
+        dir_result = os.path.join(self.dir_base, self.version_recognizer)
+
+        print('Run recognizer {0} ...'.format(self.version_recognizer))
+        self._load_data(dir_dataset)
+        self._create_model()
+        self.x_train = np.concatenate([self.x_train, self.x_validation])
+        self.y_train = np.concatenate([self.y_train, self.y_validation])
+        self._model.fit(self.x_train, self.y_train,
+                        batch_size=self.batch_size,
+                        epochs=5,
+                        verbose=1)
+        self._evaluate_test_set()
