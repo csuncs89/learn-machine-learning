@@ -276,6 +276,7 @@ class DzjRecognizer(abc.ABC):
         self._create_model()
         self.x_train = np.concatenate([self.x_train, self.x_validation])
         self.y_train = np.concatenate([self.y_train, self.y_validation])
+        self._load_weights()
         self._model.fit(self.x_train, self.y_train,
                         batch_size=self.batch_size,
                         epochs=5,
