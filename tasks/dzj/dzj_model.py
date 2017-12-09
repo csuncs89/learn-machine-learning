@@ -203,8 +203,9 @@ class DzjRecognizer(abc.ABC):
                         validation_data=(self.x_validation, self.y_validation),
                         callbacks=[callback_checkpoint, callback_tensorboard])
 
-    def _evaluate_test_set(self):
-        self._load_weights()
+    def _evaluate_test_set(self, load_weights=True):
+        if load_weights:
+            self._load_weights()
         score = self._model.evaluate(self.x_test, self.y_test, verbose=0)
         path_test_results = os.path.join(self.dir_base, self.version_recognizer,
                                          'test_results.json')
@@ -279,6 +280,6 @@ class DzjRecognizer(abc.ABC):
         self._load_weights()
         self._model.fit(self.x_train, self.y_train,
                         batch_size=self.batch_size,
-                        epochs=5,
+                        epochs=2,
                         verbose=1)
-        self._evaluate_test_set()
+        self._evaluate_test_set(load_weights=False)
