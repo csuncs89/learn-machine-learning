@@ -183,6 +183,7 @@ class DzjRecognizer(abc.ABC):
     def _train(self, epochs):
         self._load_weights()
         callback_checkpoint = callbacks.ModelCheckpoint(
+            monitor='val_acc',
             filepath=self._path_weights,
             verbose=1,
             save_best_only=True,
