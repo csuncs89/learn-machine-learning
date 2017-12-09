@@ -264,7 +264,7 @@ class DzjRecognizer(abc.ABC):
                       .format(y_pred, y_gt))
 
                 dir_train = os.path.join(dir_dataset, 'train', str(y_pred))
-                path_train = os.path.join(dir_train, os.listdir(dir_train)[1])
+                path_train = os.path.join(dir_train, os.listdir(dir_train)[2])
                 print(path_train)
                 normal_show('img_pred', cv2.imread(path_train,
                                                    cv2.IMREAD_GRAYSCALE))
