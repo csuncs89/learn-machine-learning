@@ -269,7 +269,7 @@ class DzjRecognizer(abc.ABC):
                                                    cv2.IMREAD_GRAYSCALE))
                 normal_show_wait_esc('img', img)
 
-    def train_full_train_data(self, dir_dataset):
+    def train_full_train_data(self, dir_dataset, epochs):
         dir_result = os.path.join(self.dir_base, self.version_recognizer)
 
         print('Run recognizer {0} ...'.format(self.version_recognizer))
@@ -280,6 +280,6 @@ class DzjRecognizer(abc.ABC):
         self._load_weights()
         self._model.fit(self.x_train, self.y_train,
                         batch_size=self.batch_size,
-                        epochs=5,
+                        epochs=epochs,
                         verbose=1)
         self._evaluate_test_set(load_weights=False)
