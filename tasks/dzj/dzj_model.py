@@ -280,6 +280,6 @@ class DzjRecognizer(abc.ABC):
         self._load_weights()
         self._model.fit(self.x_train, self.y_train,
                         batch_size=self.batch_size,
-                        epochs=2,
+                        epochs=5,
                         verbose=1)
         self._evaluate_test_set(load_weights=False)
