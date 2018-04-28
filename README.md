@@ -1,5 +1,5 @@
 ## Learn Machine Learning
 
-### Topics
+### Fundamental Theory
 
 #### [Backpropagation Algorithm](theory/back-prop.md)
