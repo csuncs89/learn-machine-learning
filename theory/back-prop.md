@@ -25,9 +25,10 @@ x1^2 + x2^2 = fixed value
 ```
 
 ## Derivation of backpropagation
-```
-Goal: calculate delta_Cost/delta_w(j, k, l) and delta_Cost/delta_b(j, l)
-(Both delta_Cost/delta_w(j, k, l) and delta_Cost/delta_b(j, l) are gradients)
+```markdown
+Goal: calculate partial(Cost, w(j, k, l)) and partial(Cost, b(j, l))
+(partial(Cost, w(j, k, l), partial(Cost, b(j, l)) are values in
+    [gradient definition](back-prop.md#gradient-descent-is-the-fastest-to-minimize-y))
 ---
 Given the following definitions
     x(j): The j-th dimension value of the input vector x
@@ -57,4 +58,3 @@ Given the following definitions
     error(j, l) stands for:
         partial(Cost_x, z(j, l))
 ```
-
