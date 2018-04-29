@@ -44,8 +44,8 @@ Given the following definitions
         Bias of the j-th neuron in the l-th layer
         
     z(j, l):
-        sum_over_k( w(j, k, l) * a(k, l - 1) ) + b(j, l)  (l >= 2)
-        sum_over_k( w(j, k, 1) *    x(k)     ) + b(j, 1)  (k = 1)
+        sum_over_k0( w(j, k0, l) * a(k0, l - 1) ) + b(j, l)  (l >= 2)
+        sum_over_k0( w(j, k0, 1) *    x(k0)     ) + b(j, 1)  (l = 1)
         
     a(j, l):
         Activation of the j-th neuron in the l-th layer
@@ -67,5 +67,79 @@ Because a(j, L) = sigma(z(j, L))
     = partial(Cost_x, a(j, L)) * partial(a(j, L), z(j, L))
     = partial(Cost_x, a(j, L)) * d(a(j, L), z(j, L))
 ```
-[Chain rule](https://en.wikipedia.org/wiki/Chain_rule#Higher_dimensions)
+See [Chain rule](https://en.wikipedia.org/wiki/Chain_rule#Higher_dimensions) |
 [Chain rule special case](https://wikimedia.org/api/rest_v1/media/math/render/svg/3d059d8743b6dc8824e042fa091e84c39d7db49c)
+Both `partial(Cost_x, a(j, L))` and `d(a(j, L), z(j, L))` can be easily computed
+
+```
+error(j, l) = partial(Cost_x, z(j, l))
+error(j, l + 1) = partial(Cost_x, z(j, l + 1))
+
+z(j, l + 1) = sum_over_k0( w(j, k0, l + 1) * a(k0, l) ) + b(j, l + 1)
+a(j=k0, l)     = sigma( z(j=k0, l) )
+
+z(j, l + 1) = sum_over_k0( w(j, k0, l + 1) * sigma(z(j=k0, l))) + b(j, l + 1)
+
+suppose l + 1 layer has 2 neurons, l layer has 3 neurons
+
+z(j=1, l + 1) = w(j=1, k=1, l + 1) * sigma(z(k=1, l)) +
+                w(j=1, k=2, l + 1) * sigma(z(k=2, l)) +
+                w(j=1, k=3, l + 1) * sigma(z(k=3, l))
+                
+z(j=2, l + 1) = w(j=2, k=1, l + 1) * sigma(z(k=1, l)) +
+                w(j=2, k=2, l + 1) * sigma(z(k=2, l)) +
+                w(j=2, k=3, l + 1) * sigma(z(k=3, l))
+
+Because 
+    z(1, l + 1) depends on z(j, l)
+    z(2, l + 1) depends on z(j, l)
+
+So we have error(j=j0, l)
+    = partial(Cost_x, z(j=j0, l))
+    = partial( Cost_x, z(j=1, l+1)) * partial(z(j=1, l+1), z(j=j0, l)) ) +
+      partial( Cost_x, z(j=2, l+1)) * partial(z(j=2, l+1), z(j=j0, l)) )
+    = sum([
+            error(j, l + 1) * partial( z(j=k0, l + 1), z(j=j0, l) )
+            for k0 in range(2)
+      ])
+    
+    because 
+        z(j=k0, l+1) = w(j=k0, k=1, l+1) * sigma(z(j=1, l)) +
+                       w(j=k0, k=2, l+1) * sigma(z(j=2, l)) +
+                       w(j=k0, k=3, l+1) * sigma(z(j=3, l))
+        and only sigma(z(j=j0, l)) depends on z(j=j0, l)
+    so we have
+    partial(z(j=k0, l+1), z(j=j0, l))
+        = w(j=k0, k=j0, l+1) * d(sigma(z(j=j0, l), z(j=j0, l))
+    
+    so we have
+    error(j=j0, l)
+        = sum([
+            error(j, l+1) * w(j=k0, k=j0, l+1) * d( sigma(z(j=j0, l), z(j=j0, l) )
+            for k0 in range(2)
+        ])
+```
+
+```
+Because we have
+    z(j0, l):
+        sum_over_k0( w(j0, k0, l) * a(k0, l - 1) ) + b(j0, l)  (l >= 2)
+        sum_over_k0( w(j0, k0, 1) *    x(k0)     ) + b(j0, 1)  (l = 1)
+So only z(j0, l) depends on b(j0, l), so by chain rule:
+    partial( Cost_x, b(j0, l) )
+        = partial( Cost_x, z(j0, l) )
+        = error(j0, l)
+```
+
+```
+Because we have
+    z(j=j0, l):
+        sum_over_k0( w(j0, k0, l) * a(j=k0, l - 1) ) + b(j0, l)  (l >= 2)
+        ( w(j0, k=1, l) * a(j=1, l-1) + b(j=1, l) +
+          w(j0, k=2, l) * a(j=2, l-1) + b(j=2, l) + ...)
+        sum_over_k0( w(j0, k0, 1) *    x(j=k0)     ) + b(j0, 1)  (l = 1)
+
+So only z(j=j0, l) depends on w(j0, k0, l), so by chain rule:
+    partial( Cost_x, w(j0, k0, l) )
+        = a(j=k0, l-1) * partial(Cost_x, z(j=j0, l))
+```
