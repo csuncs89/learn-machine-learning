@@ -28,7 +28,7 @@ x1^2 + x2^2 = fixed value
 ```
 Goal: calculate partial(Cost, w(j, k, l)) and partial(Cost, b(j, l))
 ```
-partial(Cost, w(j, k, l), partial(Cost, b(j, l)) are values in
+`partial(Cost, w(j, k, l)`, `partial(Cost, b(j, l))` are values in
     [Definition of gradient](https://en.wikipedia.org/wiki/Gradient#Cartesian_coordinates)
 
 ```
