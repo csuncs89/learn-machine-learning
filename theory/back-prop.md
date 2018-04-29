@@ -142,5 +142,6 @@ Because we have
 
 So only z(j=j0, l) depends on w(j0, k0, l), so by chain rule:
     partial( Cost_x, w(j0, k0, l) )
-        = a(j=k0, l-1) * partial(Cost_x, z(j=j0, l))
+        = a(j=k0, l-1) * partial(Cost_x, z(j0, l))
+        = a(j=k0, l-1) * error(j0, l)
 ```
