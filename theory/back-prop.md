@@ -22,3 +22,37 @@ x1^2 + x2^2 = fixed value
     In order to maximize delta_y, make theta 0.
     Then x1, x2 = k * grad1, k * grad2
 ```
+
+## Derivation of backpropagation
+```
+Goal: calculate delta_Cost/delta_w(j, k, l) and delta_Cost/delta_b(j, l)
+---
+Given the following definitions
+    x(j): value in the j-th dimension of the input vector x
+    
+    w(j, k, l) stands for:
+        the weight for the connection from
+            the k-th neuron in the (l-1)-th layer to 
+            the j-th neuron in the l-th layer
+            
+    b(j, l) stands for:
+        the bias of the j-th neuron in the l-th layer
+        
+    z(j, l) stands for:
+        sum_over_k( w(j, k, l) * a(k, l - 1) ) + b(j, l)  (l >= 2)
+        sum_over_k( w(j, k, 1) * x(k) )        + b(j, 1)  (k = 1)
+        
+    a(j, l) stands for:
+        the activation of the j-th neuron in the l-th layer
+        = sigma(z(j, l))
+        
+    y(j, L) stands for:
+        the j-th output in L-th layer
+        
+    Cost_x stands for the cost given input x:
+        Cost_x = sum_over_j( (y(j, L) - a(j, L) )^2 ) / 2
+        
+    error(j, l) stands for:
+        partial(Cost_x, z(j, l))
+```
+
