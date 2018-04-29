@@ -29,7 +29,7 @@ x1^2 + x2^2 = fixed value
 Goal: calculate partial(Cost, w(j, k, l)) and partial(Cost, b(j, l))
 ```
 partial(Cost, w(j, k, l), partial(Cost, b(j, l)) are values in
-    [gradient definition](back-prop.md#gradient-descent-is-the-fastest-to-minimize-y)
+    [Definition of gradient](https://en.wikipedia.org/wiki/Gradient#Cartesian_coordinates)
 
 ```
 Given the following definitions
