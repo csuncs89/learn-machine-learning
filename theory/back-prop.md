@@ -1,6 +1,7 @@
 ## Gradient descent is the fastest to minimize y
+[Definition of gradient](https://en.wikipedia.org/wiki/Gradient#Cartesian_coordinates)
 ```
-gradient = (grad1, grad2) 
+gradient = (grad1, grad2)
 delta_y nearly equals grad1 * delta_x1 + grad2 * delta_x2
 
 When length of (delta_x1, delta_x2) is fixed, we need to prove that
@@ -26,28 +27,29 @@ x1^2 + x2^2 = fixed value
 ## Derivation of backpropagation
 ```
 Goal: calculate delta_Cost/delta_w(j, k, l) and delta_Cost/delta_b(j, l)
+(Both delta_Cost/delta_w(j, k, l) and delta_Cost/delta_b(j, l) are gradients)
 ---
 Given the following definitions
-    x(j): value in the j-th dimension of the input vector x
+    x(j): The j-th dimension value of the input vector x
     
-    w(j, k, l) stands for:
-        the weight for the connection from
-            the k-th neuron in the (l-1)-th layer to 
-            the j-th neuron in the l-th layer
+    w(j, k, l):
+        Weight for the connection from
+            the k-th neuron in the (l - 1)-th layer to 
+            the j-th neuron in the   l-th     layer
             
-    b(j, l) stands for:
-        the bias of the j-th neuron in the l-th layer
+    b(j, l):
+        Bias of the j-th neuron in the l-th layer
         
-    z(j, l) stands for:
+    z(j, l):
         sum_over_k( w(j, k, l) * a(k, l - 1) ) + b(j, l)  (l >= 2)
-        sum_over_k( w(j, k, 1) * x(k) )        + b(j, 1)  (k = 1)
+        sum_over_k( w(j, k, 1) *    x(k)     ) + b(j, 1)  (k = 1)
         
-    a(j, l) stands for:
-        the activation of the j-th neuron in the l-th layer
+    a(j, l):
+        Activation of the j-th neuron in the l-th layer
         = sigma(z(j, l))
         
-    y(j, L) stands for:
-        the j-th output in L-th layer
+    y(j, L):
+        j-th output in L-th layer
         
     Cost_x stands for the cost given input x:
         Cost_x = sum_over_j( (y(j, L) - a(j, L) )^2 ) / 2
