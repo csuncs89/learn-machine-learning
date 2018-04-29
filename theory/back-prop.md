@@ -25,11 +25,13 @@ x1^2 + x2^2 = fixed value
 ```
 
 ## Derivation of backpropagation
-```markdown
+```
 Goal: calculate partial(Cost, w(j, k, l)) and partial(Cost, b(j, l))
-(partial(Cost, w(j, k, l), partial(Cost, b(j, l)) are values in
-    [gradient definition](back-prop.md#gradient-descent-is-the-fastest-to-minimize-y))
----
+```
+partial(Cost, w(j, k, l), partial(Cost, b(j, l)) are values in
+    [gradient definition](back-prop.md#gradient-descent-is-the-fastest-to-minimize-y)
+
+```
 Given the following definitions
     x(j): The j-th dimension value of the input vector x
     
