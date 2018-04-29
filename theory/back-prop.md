@@ -69,6 +69,7 @@ Because a(j, L) = sigma(z(j, L))
 ```
 See [Chain rule](https://en.wikipedia.org/wiki/Chain_rule#Higher_dimensions) |
 [Chain rule special case](https://wikimedia.org/api/rest_v1/media/math/render/svg/3d059d8743b6dc8824e042fa091e84c39d7db49c)
+
 Both `partial(Cost_x, a(j, L))` and `d(a(j, L), z(j, L))` can be easily computed
 
 ```
