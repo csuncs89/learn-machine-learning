@@ -30,7 +30,7 @@
 https://www.zhihu.com/question/22713209?from=profile_question_card
 - CPM (Cost per Mille)
 - CPM是媒体对千次展示的报价，也就是广告主购买流量的价格成本
-- eCPM (effective Cost per Mille): **注意，书里面eCPM的缩写是错误的**
+- eCPM (effective Cost per Mille): **注意，书里面eCPM的缩写可能是错误的** [1](chapter2.md#计算广告的核心量化指标)
 - eCPM是对广告有效程度的度量，也就是千次展示能为广告主带来的收入
 - eCPM = 点击率 * 点击价值
 - 点击价值 = （到达率 * 转化率 * 客单价）
