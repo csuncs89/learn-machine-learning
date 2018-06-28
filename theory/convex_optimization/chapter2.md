@@ -137,3 +137,52 @@ suppose we have a point x0 in the hyperplane, then
 which means that a is a normal vector, and the inner product can be 
 associated with the angle between a and (x - x0)
 ```
+
+## Definition of polyhedra
+```markdown
+Solution set of a finite number of finite number of linear equalities
+and inequalities
+Thus it is the intersection of a finite number of halfspaces and hyperplanes
+
+Polyheras are convex sets.
+```
+
+## Definition of simplex
+```markdown
+convex hull of k + 1 afflinely independent points (v0, ..., vk) in R^n
+(afflinely independent means that v1 - v0, ..., vk - v0 are linearly independent)
+```
+
+## Simplex can be described as a polyhedra
+```markdown
+Suppose C is a simplex, then
+  x in C, if and only if x = theta0 * v0 + ... + theta_k * v_k, for some thetas with
+    any theta >= 0 and sum(thetas) = 1
+  then
+  x = (1 - theta1 - ... - theta_k) * v0 + theta1 * v1 + ... + theta_k * v_k
+  x = v0 + theta1 * (v1 - v0) + ... + theta_k * (v_k - v0)
+  denote (theta1, ..., theta_k) as y, then
+  any theta in y >= 0 and sum(y) <= 1
+so if we denote [ v1 - v0, ..., v_k - v0 ] as B (shape is n*k)
+then the original definition is equivalent to 
+  x in C, if and only if
+    x = v0 + B * y for some y with any theta >= 0 and sum(y) <= 1
+the affine independence of v0 to v_k implies that the matrix B has rank k.
+Therefore there exists a nonsingular matrix A = (A1, A2) in R^(n*n), such that
+  AB = stack_rows(A1, A2) * B = stack_rows(I, 0) (shape is n*k)
+  
+  multiply A to x = v0 + B * y,
+  so stack_rows(A1, A2) * x = stack_rows(A1, A2) * (v0 + B * y)
+  which is equaivalent to both
+  `A1 * x = A1 * (v0 + B * y)` and `A2 * x = A2 * (v0 + B * y)` are satisfied, then we get
+  `A1 * x = A1 * v0 + y` and `A2 * x = A2 * v0`, and by the condition above
+    any theta in y >= 0 and sum(y) <= 1, we can get a set of linear equalities and inequilities 
+  
+  `A1 * x - A1 * v0 >= 0` and
+  `transpose(1) * (A1 * x - A1 * v0) <= 1` and
+  `A2 * x = A2 * v0`
+  
+So simplex can be described as a ployhedra
+```
+
+## 
