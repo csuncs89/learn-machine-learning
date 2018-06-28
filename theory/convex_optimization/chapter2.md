@@ -185,4 +185,13 @@ Therefore there exists a nonsingular matrix A = (A1, A2) in R^(n*n), such that
 So simplex can be described as a ployhedra
 ```
 
-## 
+## Operations that preserve convexity
+```markdown
+intersection, affine function, inverse of affine function,
+projection of convex set onto some of its coordinates is convex,
+sum of two convex sets is convex
+partial sum of S1, S2, S1 is in R^n x R^m and S2 is in R^n x R^m,
+  defined as S = {(x, y1 + y2) | (x, y1) in S1, (x, y2) in S2}
+  if both S1 and S2 are convex, then partial sum of S1 and S2 is convex
+```
+
