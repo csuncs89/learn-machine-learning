@@ -62,3 +62,62 @@ And we can remove the restriction of `distinct` points
 So in human language, we have that
   `affine set contains every affine combination of its points`
 ```
+
+## Affine set can be expressed as a subspace plus an offset
+```markdown
+
+```
+
+## Dimension of affine set C
+```markdown
+Dimension of the affine set C is the dimension of the subspace V = C - x0,
+  where x0 is any element of C
+```
+
+## The solution set of a system of linear equations is an affine set, and vice versa
+```markdown
+```
+
+## Definition of affine hull
+```markdown
+An affine hull is the set of all affine combinations of points in some subset C of R,
+denoted as `aff C`
+
+The affine hull is the smallest affine set that contains C
+```
+
+## Definition of affine dimension of a set C
+```markdown
+The affine dimension of a set C is the dimension of its affine hull
+```
+
+## Definition of relative interior of a set C
+```markdown
+The relative interior of a set C is defined as
+  {x in C | intersection of B(x, r) and aff_hull(C) is a subset of C for some r > 0}
+  where B(x, r) is a ball of radius r and center x 
+  
+Compare with the definition of interior of a set C
+  {x in C | B(x, r) is a subset of C for some r > 0}
+We can see that the ball is made smaller into the set of aff_hull(C).
+So that the relative interior might be bigger than interior, because the condition is relaxed
+```
+
+## Definition of convex set, convex combination, convex hull
+```markdown
+If we restrict the thetas in the above definitions to be within 0 and 1, 
+we will get the definitions.
+```
+
+## Definition of cone (nonnegative homogeneous)
+```markdown
+A set C is called a cone (nonnegative homogeneous),
+  if for every x in C, and theta >= 0, we have theta * x is in C
+```
+
+## Definition of convex cone, conic combination (nonnegative linear combination), conic hull
+```markdown
+If we restrict the thetas of affine related definitions to be >= 0,
+we will get the definitions.
+```
+
