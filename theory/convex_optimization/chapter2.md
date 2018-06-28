@@ -121,3 +121,19 @@ If we restrict the thetas of affine related definitions to be >= 0,
 we will get the definitions.
 ```
 
+## Definition of hyperplane and halfspace
+```markdown
+A hyperplane is a set of the the form:
+  {x | transpose(a) * x = b}, where a is in R^n, a != 0, and b in R
+  
+The two halfspaces are:
+  {x | transpose(a) * x >= b},
+  {x | transpose(a) * x <= b}
+  
+geometric interpretations:
+suppose we have a point x0 in the hyperplane, then
+  transpose(a) * x0 = b, then
+  transpose(a) * (x - x0) = 0
+which means that a is a normal vector, and the inner product can be 
+associated with the angle between a and (x - x0)
+```
