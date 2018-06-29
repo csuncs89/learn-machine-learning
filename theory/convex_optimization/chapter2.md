@@ -244,3 +244,9 @@ Suppose C is a subset of R^n, and x0 is a point in its boundary,
   the hyperplane {x | tranpose(a) * x = tranpose(a) * x} is called
   a supporting hyperplane to C at the point x0
 ```
+
+## Supporting hyperplane therom
+```markdown
+For any nonempty convex set C, and for any x0 in its boundary, there
+  exists a supporting hyperplane to C at x0
+```
