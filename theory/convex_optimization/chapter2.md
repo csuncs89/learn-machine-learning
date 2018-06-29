@@ -254,7 +254,7 @@ For any nonempty convex set C, and for any x0 in its boundary, there
 ## Definition of dual cone
 ```markdown
 K is a cone, the dual cone is defined as
-  dual_cone(K) = { y | tranpose(x) * y >= 0 for all x in }
+  dual_cone(K) = { y | tranpose(x) * y >= 0 for all x in K }
 dual_cone(K) is a cone and is always convex
 ```
 https://en.wikipedia.org/wiki/Dual_cone_and_polar_cone
