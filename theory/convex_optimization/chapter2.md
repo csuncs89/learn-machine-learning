@@ -220,3 +220,27 @@ linear-fractional function
 linear-fractional function preserve convexity
 ```
 
+## Definition of minimum and minimal
+- https://www.zhihu.com/question/22319675
+- minimum: 最小值，minimal：极小值
+
+## Separating hyperplane therom
+```markdown
+Suppose C and D are nonempty disjoint convex sets, then there exists a != 0 and b
+  such that transpose(a) * x <= b for all x in C and 
+  transpose(a) * x >= b for all x in D
+```
+
+## Definition of closure, boundary and interior of a set
+- closure: https://en.wikipedia.org/wiki/Closure_(topology)
+- boundary: https://en.wikipedia.org/wiki/Boundary_(topology)
+- interior: https://en.wikipedia.org/wiki/Interior_(topology)
+
+## Definition of supporting hyperplane
+```markdown
+Suppose C is a subset of R^n, and x0 is a point in its boundary,
+  if there exists a != 0 such that 
+  transpose(a) * x <= transpose(a) * x0 is true for all x in C, then
+  the hyperplane {x | tranpose(a) * x = tranpose(a) * x} is called
+  a supporting hyperplane to C at the point x0
+```
