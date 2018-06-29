@@ -187,11 +187,36 @@ So simplex can be described as a ployhedra
 
 ## Operations that preserve convexity
 ```markdown
-intersection, affine function, inverse of affine function,
-projection of convex set onto some of its coordinates is convex,
+intersection of convex sets is convex
+
+projection of convex set onto some of its coordinates is convex
+
 sum of two convex sets is convex
+
 partial sum of S1, S2, S1 is in R^n x R^m and S2 is in R^n x R^m,
   defined as S = {(x, y1 + y2) | (x, y1) in S1, (x, y2) in S2}
   if both S1 and S2 are convex, then partial sum of S1 and S2 is convex
+  
+affine function 
+  f(x) = Ax + b that transforms from R^n to R^m, and A is in R^(m*n) and b is in R^m
+if S is subset of R^n and S is convex, then the image of S under f is convex
+and the inverse image of S under f is also convex
+  (inverse_f(S) = {x | f(x) in S})
+  
+perspective function
+  the perspective function scales or normalizes vectors so that the last component
+  is one, and then drops the last component
+  (formally: 
+    define the perspective function P: R^(n+1) -> R^n, 
+      with domain_P = decartes(R^n, set_of_positive_numbers).
+      as P(z, t) = z/t 
+   )
+if a subset C of domain_P is convex, then its image P(C) = {P(x) | x in C} is convex
+  The result is intuitive: a convex object, viewed through a pin-hole camera, yields a convex image
+The inverse image of a convex set under the perspective function is also convex
+
+linear-fractional function
+  it is P(g(x)) where g is an affine function and P is a perspective function
+linear-fractional function preserve convexity
 ```
 
