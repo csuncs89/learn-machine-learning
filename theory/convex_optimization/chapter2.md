@@ -220,6 +220,35 @@ linear-fractional function
 linear-fractional function preserve convexity
 ```
 
+## Definition of open set
+https://en.wikipedia.org/wiki/Open_set#Definitions
+
+## Definition of closed set
+https://en.wikipedia.org/wiki/Closed_set
+
+## Definition of proper cones
+[Definition of cone](chapter2.md#definition-of-cone-nonnegative-homogeneous)
+```markdown
+A cone K in R^n is called a proper cone if it satisfies the following:
+  K is convex
+  K is closed
+  K is solid, which means it has nonempty interior
+  K is pointed, which means that is contains no line
+    (or equivalently, x in K, -x in K => x = 0)
+```
+
+## Definition of partial ordering
+https://en.wikipedia.org/wiki/Partially_ordered_set
+
+## Definition of generalized inequality
+```markdown
+A generalized inequality defined on R^n is a partial ordering on R^n
+The partial ordering of (x, y) associated with the proper cone K is equivalent to:
+  y - x is in K
+and the strict partial ordering is equivalent to:
+  y - x is in interior(K)
+```
+
 ## Definition of minimum and minimal
 - https://www.zhihu.com/question/22319675
 - minimum: 最小值，minimal：极小值
