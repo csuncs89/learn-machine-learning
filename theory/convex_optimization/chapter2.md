@@ -287,3 +287,28 @@ K is a cone, the dual cone is defined as
 dual_cone(K) is a cone and is always convex
 ```
 https://en.wikipedia.org/wiki/Dual_cone_and_polar_cone
+
+## Properties of dual cone
+```markdown
+dual_cone(K) is closed and convex
+if K1 is a subset of K2, then dual_cone(K2) is subset of dual_cone(K1)
+if K has nonempty interior, then dual_cone(K) is pointed
+if the closure of K is pointed, then dual_cone(K) has nonempty interior
+dual_cone(dual_cone(K)) is the closure of the convex hull of K
+  ( if K is convex and closed, dual_cone(dual_cone(K)) = K )
+if K is a proper cone, then dual_cone(K) is a proper cone,
+  and dual_cone(dual_cone(K)) = k
+```
+
+## Properties relating a generalized inequality and its dual
+```markdown
+le: less than or equal, lt: less than
+ge: greater than or equal, gt: greater than
+le_K(x, y) is true if and only if transpose(lambda)*x <= transpose(lambda)*y
+  for all lambda satisfies ge_dual_cone_K(lambda, 0) 
+gt_K(x, y) is true if and only if transpose(lambda)*x < transpose(lambda)*y
+  for all lambda satisfies ge_dual_cone_K(lambda, 0) and lambda != 0
+  
+These can be understood geometrically by view the * as inner product
+```
+
