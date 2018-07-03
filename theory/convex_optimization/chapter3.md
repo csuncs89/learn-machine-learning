@@ -38,3 +38,13 @@ Pointwise maximum of f1 and f2 is defined as:
 ## Pointwise maximum preserves convexity
 ```markdown
 ```
+
+## 3.3.1
+## Definition of conjugate of function
+```markdown
+Let f: R^n -> R.
+Then conj_f: R^n -> R is defined as
+  conj_f(y) = sup( transpose(y) * x - f(x), for x in domain(f) )
+domain(conj_f) consists of y in R^n for which the sup is finite, i.e., 
+for which the difference transpose(y) * x - f(x) is bounded above on domain(f)
+```
