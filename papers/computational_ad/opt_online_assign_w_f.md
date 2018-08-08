@@ -22,16 +22,27 @@ Additional goal:
     
 Algorithm input:
   G_sample: A sample of G
-  visits: users visits, visits[0], ...,visits[num_visits - 1]
-  
+  J: set of guaranteed contracts
+  visits: users visits arrive one at a time
+    visits[0], ...,visits[num_visits - 1]
+
 Algorithm:
 
-The simple idea:
+## The simple idea:
 online_alloc = {}
 for i_visit in range(num_visits):
-  display ad of contract j to visits[i_visit] according to
-    G_sample and online_alloc
+  select contract j and display ad of it to visits[i_visit] according to
+    G_sample, J, visits[:i_visit], online_alloc
   online_alloc.add((i_visit, j))
+  
+## Idea of this paper:
+create an offline allocation plan according to G_sample
+
+for i_visit in range(num_visits):
+  select contract j and display ad of it to visits[i_visit] according to
+    offline_alloc_plan, visits[i_visit]
+
+Space of offline_plan is O(size(J))
 ```
 
 ```markdown
