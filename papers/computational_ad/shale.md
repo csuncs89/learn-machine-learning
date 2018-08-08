@@ -17,16 +17,17 @@ x(i, j): fraction(probability) of s(i) allocated to d_j
 p_j: penalty of contract j
 u_j: under-delivery of contract j
   i.e. number of user visits delivered less than d_j
-  d_j - sum(s_i * x(i, j), for user i in neighbor(j))
+  u_j >= d_j - sum(s_i * x(i, j), for user i in neighbor(j)) (demand constraint)
 theta(i, j): demand of contract j / total eligible supply for contract j
   d_j / S_j, where S_j = sum(s_i, for i in neighbor(j))
-  ( eligible means there is a connected edge
+  ( eligible means there is an edge
     example:
       s_1 (10), s_2 (20), s_5 (70) are eligible supply for d_1 (12),
       then we have s(1, 1), s(2, 1), s(5, 1) all equal to 0.12
-      obvious if we choose x(1, 1), x(2, 1), x(5, 1) all as 0.12,
+      obviously if we choose x(1, 1), x(2, 1), x(5, 1) all as 0.12,
       the demand can be satisfied )
 non-representativeness for contract j:
+  f_non_repr(j) = 
   1/2 * sum( s_i * V_j / theta(i, j) *  (x(i, j) - theta(i, j)) ** 2,
              for i in neighbor(j)
         )
@@ -38,4 +39,10 @@ non-representativeness for contract j:
     besides, adding s_i will make the function scale-free
     (see paper: Optimal Online Assignment with Forecasts)
 
+## Goal
+Minimize ( 1/2 * sum( f_non_repr(j), for j in all contract) + 
+           sum(p_j * u_j, for j in all contract )
+s.t.    u_j >= d_j - sum(s_i * x(i, j), for user i in neighbor(j)) [1. demand constraints]
+        sum(x(i, j), for j in neighbor(i)) <= 1 [2. supply constraints]
+        x(i, j), u_j >= 0 [3. non-negativity constraints]
 ```
