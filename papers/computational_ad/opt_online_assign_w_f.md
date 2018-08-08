@@ -23,10 +23,13 @@ Additional goal:
 Algorithm input:
   G_sample: A sample of G
   visits: users visits, visits[0], ...,visits[num_visits - 1]
+  
 Algorithm:
+
+The simple idea:
 online_alloc = {}
 for i_visit in range(num_visits):
-  allocate ad of contract j to visits[i_visit] according to
+  display ad of contract j to visits[i_visit] according to
     G_sample and online_alloc
   online_alloc.add((i_visit, j))
 ```
