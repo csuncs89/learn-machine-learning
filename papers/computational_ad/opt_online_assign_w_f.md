@@ -12,6 +12,26 @@ s_i: supply of user i
   representing how many times the user visits during the time period
 G: (union(I, J), E)
 
+Basic goal:
+  Find an allocation of user visits to contract, so that
+  1. at most one ad is shown on each user visit (supply constraint)
+  2. each contract fulfills its demand (demand constraint)
+Additional goal:
+  representative allocations
+    pursue more types of users allocated to each contract
+    
+Algorithm input:
+  G_sample: A sample of G
+  visits: users visits, visits[0], ...,visits[num_visits - 1]
+Algorithm:
+online_alloc = {}
+for i_visit in range(num_visits):
+  allocate ad of contract j to visits[i_visit] according to
+    G_sample and online_alloc
+  online_alloc.add((i_visit, j))
+```
+
+```markdown
 We can merge the visits of the same type of users
 Example of G:
 Gender = {M, F, Unknown}, City = {WA, CA, Unknown}, Age = {5, Unknown}
@@ -26,12 +46,5 @@ Also we have some demand nodes, eg:
   {M, WA}: 100
   ...
 Then we can construct the matching graph G between supply and demand nodes
-
-Basic goal:
-  Find an allocation of user visits to contract, so that
-  1. at most one ad is shown on each user visit (supply constraint)
-  2. each contract fulfills its demand (demand constraint)
-Additional goal:
-  representative allocations
-    pursue more types of users allocated to each contract
 ```
+
