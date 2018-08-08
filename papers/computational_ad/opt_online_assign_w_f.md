@@ -32,7 +32,7 @@ Algorithm:
 online_alloc = {}
 for i_visit in range(num_visits):
   select contract j and display ad of it to visits[i_visit] according to
-    G_sample, J, visits[:i_visit], online_alloc
+    G_sample, J, {d_j}, visits[:i_visit], online_alloc
   online_alloc.add((i_visit, j))
   
 ## Idea of this paper:
@@ -40,7 +40,7 @@ create an offline allocation plan according to G_sample
 
 for i_visit in range(num_visits):
   select contract j and display ad of it to visits[i_visit] according to
-    offline_alloc_plan, visits[i_visit]
+    offline_alloc_plan, J, {d_j}, visits[i_visit]
 
 Space of offline_plan is O(size(J))
 ```
