@@ -23,8 +23,8 @@ theta(i, j): demand of contract j / total eligible supply for contract j
   d[j] / S[j], where S[j] = sum(s[i], for i in neighbor(j))
   ( eligible means there is an edge
     example:
-      s_1 (10), s_2 (20), s_5 (70) are eligible supply for d_1 (12),
-      then we have s(1, 1), s(2, 1), s(5, 1) all equal to 0.12
+      s[1] (10), s[2] (20), s[5] (70) are eligible supply for d[1] (12),
+      then we have theta(1, 1), theta(2, 1), theta(5, 1) all equal to 0.12
       obviously if we choose x(1, 1), x(2, 1), x(5, 1) all as 0.12,
       the demand can be satisfied )
 non-representativeness for contract j:
