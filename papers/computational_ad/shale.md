@@ -76,3 +76,6 @@ for j in allocation order:
 ## Tow pieces of SHALE
 - Piece 1: Find resonable duals, which is an iterative algorithm
 - Piece 2: Convert the reasonable set of duals into a good primal solution
+
+## KKT
+See [Lagrange Multipliers and the Karush-Kuhn-Tucker conditions](http://www.csc.kth.se/utbildning/kth/kurser/DD3364/Lectures/KKT.pdf)
