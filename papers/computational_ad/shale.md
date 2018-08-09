@@ -105,7 +105,7 @@ max{0, theta(i, j=3) * (1 + (alpha(step=t, j=3) - beta(step=t, i)) / V(j) ) } +
 alpha(step=t+1, j) >= alpha(step=t, j) 
 
 max{0, theta(i, j=1) * (1 + (alpha(step=t+1, j=1) - beta(step=t, i)) / V(j) ) } +
-max{0, theta(i, j=3) * (1 + (alpha(step=t+1, j=3) - beta(step=t, i)) / V(j) ) + +
+max{0, theta(i, j=3) * (1 + (alpha(step=t+1, j=3) - beta(step=t, i)) / V(j) ) } +
 ... >= 1
 
 So in order to make it to equal 1, we have to increase beta(step=t, i) as beta(step=t+1, i)
