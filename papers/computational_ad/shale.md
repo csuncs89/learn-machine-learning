@@ -7,20 +7,20 @@ J: set of guaranteed contracts
 E: set of edge between I and J
   there is an edge (i, j)
   if user i matches the targeting constraints of contract j
-d_j: demand of contract j
-s_i: supply of user i
+d[j]: demand of contract j
+s[i]: supply of user i
   representing how many times the user visits during the time period
 G: (union(I, J), E)
-S_j: total eligible supply for contract j
+S[j]: total eligible supply for contract j
 
-x(i, j): fraction(probability) of s_i allocated to d_j
+x(i, j): fraction(probability) of s[i] allocated to d[j]
   sum(x(i, j), for contract j in neighbor(i)) == 1
-p_j: penalty of contract j
-u_j: under-delivery of contract j
-  i.e. number of user visits delivered less than d_j
-  u_j >= d_j - sum(s_i * x(i, j), for user i in neighbor(j)) (demand constraint)
+p[j]: penalty of contract j
+v[j]: under-delivery of contract j
+  i.e. number of user visits delivered less than d[j]
+  v[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) (demand constraint)
 theta(i, j): demand of contract j / total eligible supply for contract j
-  d_j / S_j, where S_j = sum(s_i, for i in neighbor(j))
+  d[j] / S[j], where S[j] = sum(s[i], for i in neighbor(j))
   ( eligible means there is an edge
     example:
       s_1 (10), s_2 (20), s_5 (70) are eligible supply for d_1 (12),
@@ -29,23 +29,23 @@ theta(i, j): demand of contract j / total eligible supply for contract j
       the demand can be satisfied )
 non-representativeness for contract j:
   f_non_repr(j) = 
-  1/2 * sum( s_i * V_j / theta(i, j) *  (x(i, j) - theta(i, j)) ** 2,
+  1/2 * sum( s[i] * V[j] / theta(i, j) *  (x(i, j) - theta(i, j)) ** 2,
              for i in neighbor(j)
         )
   where
-  V_j: the relative priority of the contract j
-    a larger V_j means that this contract's representativeness is more important
-  s_i: the larger the supply, the more important of its representativeness,
+  V[j]: the relative priority of the contract j
+    a larger V[j] means that this contract's representativeness is more important
+  s[i]: the larger the supply, the more important of its representativeness,
     which will make larger supply's x(i, j) closer to theta(i, j)
-    besides, adding s_i will make the function scale-free
+    besides, adding s[i] will make the function scale-free
     (see paper: Optimal Online Assignment with Forecasts)
 
 ## Goal
 Minimize ( 1/2 * sum( f_non_repr(j), for j in all contract) + 
-           sum(p_j * u_j, for j in all contract )
-s.t.    u_j >= d_j - sum(s_i * x(i, j), for user i in neighbor(j)) [1. demand constraints]
+           sum(p[j] * v[j], for j in all contract )
+s.t.    v[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) [1. demand constraints]
         sum(x(i, j), for j in neighbor(i)) <= 1 [2. supply constraints]
-        x(i, j), u_j >= 0 [3. non-negativity constraints]
+        x(i, j), v[j] >= 0 [3. non-negativity constraints]
 ```
 
 ## HWM algorithm
