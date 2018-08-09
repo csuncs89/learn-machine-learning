@@ -16,9 +16,9 @@ S[j]: total eligible supply for contract j
 x(i, j): fraction(probability) of s[i] allocated to d[j]
   sum(x(i, j), for contract j in neighbor(i)) == 1
 p[j]: penalty of contract j
-v[j]: under-delivery of contract j
+u[j]: under-delivery of contract j
   i.e. number of user visits delivered less than d[j]
-  v[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) (demand constraint)
+  u[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) (demand constraint)
 theta(i, j): demand of contract j / total eligible supply for contract j
   d[j] / S[j], where S[j] = sum(s[i], for i in neighbor(j))
   ( eligible means there is an edge
@@ -42,10 +42,10 @@ non-representativeness for contract j:
 
 ## Goal
 Minimize ( 1/2 * sum( f_non_repr(j), for j in all contract) + 
-           sum(p[j] * v[j], for j in all contract )
-s.t.    v[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) [1. demand constraints]
+           sum(p[j] * u[j], for j in all contract )
+s.t.    u[j] >= d[j] - sum(s[i] * x(i, j), for user i in neighbor(j)) [1. demand constraints]
         sum(x(i, j), for j in neighbor(i)) <= 1 [2. supply constraints]
-        x(i, j), v[j] >= 0 [3. non-negativity constraints]
+        x(i, j), u[j] >= 0 [3. non-negativity constraints]
 ```
 
 ## HWM algorithm
