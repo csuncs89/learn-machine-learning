@@ -79,3 +79,34 @@ for j in allocation order:
 
 ## KKT
 See [Lagrange Multipliers and the Karush-Kuhn-Tucker conditions](http://www.csc.kth.se/utbildning/kth/kurser/DD3364/Lectures/KKT.pdf)
+
+## Proof of SHALE
+```markdown
+d(j, alpha) = sum(s(i) * g(i, j, alpha(j) - beta(i)),
+                  for i in neighbor(j))
+                  
+d(j) - d(j, alpha(step=t)) <= d(j) * (alpha(step=t+1, j) - alpha(step=t, j) / V(j)
+V(j) * (d(j) - d(j, alpha(step=t)) <= d(j) * (alpha(step=t+1, j) - alpha(step=t, j))
+V(j) * (1 - d(j, alpha(step=t) / d(j)) <= alpha(step=t+1, j) - alpha(step=t, j)
+V(j) * (1 - d(j, alpha(step=t) / d(j)) + alpha(step=t, j) <= alpha(step=t+1, j)
+
+g(i, j, alpha(j) - beta(i)) = max{0, theta(i, j) * (1 + (alpha(j) - beta(i))/V(j) )}
+sum(max{0, 
+        theta(i, j) * 
+        (1 + (alpha(step=t, j) - beta(step=t, i)) / V(j) ) 
+    },
+    for j in neighbor(i) 
+) = 1
+
+max{0, theta(i, j=1) * (1 + (alpha(step=t, j=1) - beta(step=t, i)) / V(j) ) } +
+max{0, theta(i, j=3) * (1 + (alpha(step=t, j=3) - beta(step=t, i)) / V(j) ) } +
+... = 1
+
+alpha(step=t+1, j) >= alpha(step=t, j) 
+
+max{0, theta(i, j=1) * (1 + (alpha(step=t+1, j=1) - beta(step=t, i)) / V(j) ) } +
+max{0, theta(i, j=3) * (1 + (alpha(step=t+1, j=3) - beta(step=t, i)) / V(j) ) + +
+... >= 1
+
+So in order to make it to equal 1, we have to increase beta(step=t, i) as beta(step=t+1, i)
+```
