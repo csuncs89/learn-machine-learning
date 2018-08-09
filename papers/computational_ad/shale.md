@@ -11,8 +11,9 @@ d_j: demand of contract j
 s_i: supply of user i
   representing how many times the user visits during the time period
 G: (union(I, J), E)
+S_j: total eligible supply for contract j
 
-x(i, j): fraction(probability) of s(i) allocated to d_j
+x(i, j): fraction(probability) of s_i allocated to d_j
   sum(x(i, j), for contract j in neighbor(i)) == 1
 p_j: penalty of contract j
 u_j: under-delivery of contract j
@@ -46,3 +47,32 @@ s.t.    u_j >= d_j - sum(s_i * x(i, j), for user i in neighbor(j)) [1. demand co
         sum(x(i, j), for j in neighbor(i)) <= 1 [2. supply constraints]
         x(i, j), u_j >= 0 [3. non-negativity constraints]
 ```
+
+## HWM algorithm
+HWM: High Water Mark
+```markdown
+Order all contracts by their allocation order 
+For contract in the ordered contracts:
+    Try to allocate an equal fraction from all the eligible supply
+```
+```markdown
+order all demand nodes in decreasing contention order (d[j]/S[j])
+for each supply node i:
+    s_remain[i] = s[i]
+for j in allocation order:
+    find fraction such that 
+        sum( min(s_remain[i], fraction * s[i]), 
+             for i in neighbor(j) ) = d[j]
+    if fraction does not exist:
+        fraction = float('inf')
+    for i in neighbor(j):
+        s_remain -= min(s_remain[i], fraction * s[i])
+```
+
+## Key innovation of SHALE
+- The ability to take any dual solution and convert it into a good primal solution
+- Achieve this by extending the simple heuristic HWM to incorporate dual values
+
+## Tow pieces of SHALE
+- Piece 1: Find resonable duals, which is an iterative algorithm
+- Piece 2: Convert the reasonable set of duals into a good primal solution
