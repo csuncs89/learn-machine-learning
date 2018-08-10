@@ -2,11 +2,11 @@
 
 ## Problem description
 ```markdown
-I: set of individual user visits
-J: set of guaranteed contracts
+I: set of individual user visits (set of supply nodes)
+J: set of guaranteed contracts (set of demand nodes)
 E: set of edge between I and J
-  there is an edge (i, j)
-  if user i matches the targeting constraints of contract j
+  there is an edge connecting user i and contract j if 
+    user i matches the targeting constraints of contract j
 d[j]: demand of contract j
 s[i]: supply of user i
   representing how many times the user visits during the time period
