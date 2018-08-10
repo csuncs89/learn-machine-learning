@@ -19,32 +19,9 @@ Basic goal:
 Additional goal:
   representative allocations
     pursue more types of users allocated to each contract
-    
-Algorithm input:
-  G_sample: A sample of G
-  J: set of guaranteed contracts
-  visits: users visits arrive one at a time
-    visits[0], ...,visits[num_visits - 1]
-
-Algorithm:
-
-## The simple idea:
-online_alloc = {}
-for i_visit in range(num_visits):
-  select contract j and display ad of it to visits[i_visit] according to
-    G_sample, J, {d_j}, visits[:i_visit], online_alloc
-  online_alloc.add((i_visit, j))
-  
-## Idea of this paper:
-create an offline allocation plan according to G_sample
-
-for i_visit in range(num_visits):
-  select contract j and display ad of it to visits[i_visit] according to
-    offline_alloc_plan, J, {d_j}, visits[i_visit]
-
-Space of offline_plan is O(size(J))
 ```
 
+## Example of the graph
 ```markdown
 We can merge the visits of the same type of users
 Example of G:
@@ -61,4 +38,32 @@ Also we have some demand nodes, eg:
   ...
 Then we can construct the matching graph G between supply and demand nodes
 ```
+
+## Algorithms
+```markdown
+Algorithm input:
+  G_sample: A sample of G
+  J: set of guaranteed contracts
+  visits: users visits arrive one at a time
+    visits[0], ...,visits[num_visits - 1]
+
+Algorithm:
+
+### The simple idea:
+online_alloc = {}
+for i_visit in range(num_visits):
+  select contract j and display ad of it to visits[i_visit] according to
+    G_sample, J, {d_j}, visits[:i_visit], online_alloc
+  online_alloc.add((i_visit, j))
+  
+### Idea of this paper:
+create an offline allocation plan according to G_sample
+
+for i_visit in range(num_visits):
+  select contract j and display ad of it to visits[i_visit] according to
+    offline_alloc_plan, J, {d_j}, visits[i_visit]
+
+Space of offline_plan is O(size(J))
+```
+
 
