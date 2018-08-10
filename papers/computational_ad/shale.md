@@ -69,6 +69,9 @@ for j in allocation order:
         s_remain -= min(s_remain[i], fraction * s[i])
 ```
 
+## KKT
+See [Lagrange Multipliers and the Karush-Kuhn-Tucker conditions](http://www.csc.kth.se/utbildning/kth/kurser/DD3364/Lectures/KKT.pdf)
+
 ## Key innovation of SHALE
 - The ability to take any dual solution and convert it into a good primal solution
 - Achieve this by extending the simple heuristic HWM to incorporate dual values
@@ -77,8 +80,10 @@ for j in allocation order:
 - Piece 1: Find resonable duals, which is an iterative algorithm
 - Piece 2: Convert the reasonable set of duals into a good primal solution
 
-## KKT
-See [Lagrange Multipliers and the Karush-Kuhn-Tucker conditions](http://www.csc.kth.se/utbildning/kth/kurser/DD3364/Lectures/KKT.pdf)
+## SHALE algorithm
+```markdown
+
+```
 
 ## Proof of SHALE
 ```markdown
