@@ -13,7 +13,7 @@ s[i]: supply of user i
   representing how many times the user visits during the time period
 d[j]: demand of contract j
 
-G: (vertices=union(I, J), edges=E)
+G: (vertices=union(I, J), edges=E), it is a bipartite graph
 S[j]: total eligible supply for contract j
 
 x(i, j): fraction(probability) of s[i] allocated to d[j]
@@ -28,13 +28,16 @@ p[j]: penalty of contract j for under-delivery
         
 theta(i, j): 
   demand of contract j / total eligible supply for contract j
+  this is the ideal allocation that allocates every eligible supply
+    with equal probability
   i.e. d[j] / S[j], where S[j] = sum(s[i], for i in neighbor(j))
   ( eligible means there is an edge
     example:
     s[1] (10), s[2] (20), s[5] (70) are eligible supply for d[1] (12),
       then we have theta(1, 1), theta(2, 1), theta(5, 1) all equal to 0.12
       obviously if we choose x(1, 1), x(2, 1), x(5, 1) all as 0.12,
-      the demand can be satisfied )
+      the demand can be satisfied, and this is the ideal allocation that
+      allocates every eligible supply with equal probability)
 
 non-representativeness for contract j:
   f_non_repr(j) = 
@@ -55,8 +58,11 @@ non-representativeness for contract j:
 
 ## Goal
 Minimize
-  1/2 * sum(f_non_repr(j), for j in all contract) + 
-    sum(p[j] * u[j], for j in all contract)
+  1/2 * sum(f_non_repr(j), for j in all contracts) + 
+    sum(p[j] * u[j], for j in all contracts)
+    
+  which means "jointly minimize the distance between the allocation and its ideal one,
+    and the penalty of under-delivery"
     
 s.t.
   1. demand constraints are satisfied:
@@ -70,6 +76,29 @@ s.t.
       x(i, j) >= 0
       u[j] >= 0
 ```
+
+## Online serving with forecasts (forecast: sample of G)
+- Offline phase
+  - input: a sample of graph G, G_sample, with nodes: I_sample, J_sample
+  - create an allocation plan with space complexity O(J_sample)
+  
+- Online phase
+  - input
+    - the offline allocation plan
+    - user visits one by one
+    - all the contracts
+  - decide which contract to serve to the user visit
+
+## Algorithms
+- Standard algorithm
+- HWM algorithm
+- Combination of the two 
+
+## Standard algorithm
+- Offline phase
+Solve the problem using standard methods (dual problem, KKT)
+- Online phase
+
 
 ## HWM algorithm
 HWM: High Water Mark
