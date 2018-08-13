@@ -92,13 +92,25 @@ s.t.
 ## Algorithms
 - Standard algorithm
 - HWM algorithm
-- Combination of the two 
+- SHALE algorithm, which is a combination of the above two 
 
 ## Standard algorithm
 - Offline phase
+```markdown
 Solve the problem using standard methods (dual problem, KKT)
-- Online phase
+Output: demand duals alpha, alpha(j) is for contract j
+```
 
+- Online phase
+```markdown
+User i arrives
+Find the value beta(i) by solving the equation
+  sum( g(i, j, alpha(j) - beta(i)),
+       for j in neighbor(i) ) = 1
+  where
+    g(i, j, z) = max{0, theta(i, j) * (1 + z/V(j))}
+x(i, j) = g(i, j, alpha(j) - beta(i))
+```
 
 ## HWM algorithm
 HWM: High Water Mark
@@ -171,5 +183,5 @@ max{0, theta(i, j=1) * (1 + (alpha(step=t+1, j=1) - beta(step=t, i)) / V(j) ) } 
 max{0, theta(i, j=3) * (1 + (alpha(step=t+1, j=3) - beta(step=t, i)) / V(j) ) } +
 ... >= 1
 
-So in order to make it to equal 1, we have to increase beta(step=t, i) as beta(step=t+1, i)
+So in order to make it equal 1, we have to increase beta(step=t, i) as beta(step=t+1, i)
 ```
