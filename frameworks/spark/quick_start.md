@@ -84,3 +84,9 @@ reduceByKey(self, func, numPartitions=None, partitionFunc=<function portable_has
     >>> sorted(rdd.reduceByKey(add).collect())
     [('a', 2), ('b', 1)]
 ```
+
+## Caching
+```
+cache(self) method of pyspark.rdd.PipelinedRDD instance
+    Persist this RDD with the default storage level (C{MEMORY_ONLY_SER}).
+```
