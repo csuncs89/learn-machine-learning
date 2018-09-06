@@ -25,3 +25,16 @@ ref: https://spark.apache.org/docs/1.6.0/programming-guide.html#spark-programmin
 - accumulators
   - https://spark.apache.org/docs/1.6.0/api/python/pyspark.html?highlight=broadcast#pyspark.Accumulator
   
+# RDD operation: transformations
+create a new dataset from an existing one
+
+# RDD operation: actions
+return a value to the driver program after running a computation on thed dataset
+
+# persist an RDD in memory
+use the persist (or cache) method
+
+# RDD.aggregate
+- https://stackoverflow.com/questions/28240706/explain-the-aggregate-functionality-in-spark
+- https://spark.apache.org/docs/1.6.0/api/python/pyspark.html#pyspark.RDD.aggregate
+
