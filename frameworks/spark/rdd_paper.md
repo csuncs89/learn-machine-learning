@@ -5,6 +5,7 @@ An RDD is a read-only, partitioned collection of records
 RDDs can only be created through deterministic operations on either
 * data in stable storage
 * other RDDs
+
 These operations are called transformations
 
 # What is an `transformation`?
